@@ -1,0 +1,1813 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Curro Rankings 2023</title>
+        <!--<script type="text/javascript" src="d3/d3.v3.js"></script>-->
+        <style>
+svg .pumpkin {
+    fill: yellow;
+    stroke: orange;
+    stroke-width: 5;
+ }
+
+svg .axis path,
+svg .axis line {
+    fill: none;
+    stroke: #444;
+    shape-rendering: crispEdges;
+}
+
+svg .axis text {
+    font-family: sans-serif;
+    font-size: 11px;
+}
+
+p.caption {
+    font-size:.8em;
+    padding-top:1em;
+    padding-bottom:1em;
+    text-align:center;
+}
+
+div.container {
+    width:800px;
+    margin-left:  auto;
+    margin-right: auto;
+}
+
+div.bar {
+    display: inline-block;
+    width: 20px;
+    height: 75px;   /* We'll override this later */
+    background-color: teal;
+    margin-right:2px;
+}
+</style>
+    </head>
+    <body>
+        <div style="height: 54px; width:100%; background-color: #003B6F;"> 
+            <div align=center>
+                <img src="curro-logo-1.png" width="120" class="logo-136-lg">
+            </div>
+        </div>
+    <div class="container">
+        <h2>Curro - Classes Leaderboard - Grade 10</h2>
+        <a href="index.html">Schools Gr. 8</a> | <a href="schools-9.html">Schools Gr. 9</a> | <a href="schools-10.html">Schools Gr. 10</a> | <a href="schools-11.html">Schools Gr. 11</a> | <a href="schools-12.html">Schools Gr. 12</a><br/>
+        <a href="classes-8.html">Classes Gr. 8</a> | <a href="classes-9.html">Classes Gr. 9</a> | <a href="classes-10.html">Classes Gr. 10</a> | <a href="classes-11.html">Classes Gr. 11</a> | <a href="classes-12.html">Classes Gr. 12</a>
+        <p class="caption"> All schools and classes that are participating and have started practising are listed below. 
+            They are listed in the order of their current ranking. 
+            You can see the changes in ranking of the schools/classes in the weekly rankings.
+            A school/class will be <strong>highlighted</strong> if you move your cursor over the name.</p>
+        <svg id="rankings" width=1600 height=2400></svg>
+    </div>
+
+<!--        <script type="text/javascript"> -->
+
+<script type="module">
+
+import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
+
+
+var weekcount = 11; /* add a fake last week */
+var schoolcount = 20;
+
+var w = 700;
+var h = 1600;
+var max = 2400;
+var padding = 100;
+var colours = ["yellow", "red", "green", "blue", "orange","brown","yellow"];
+
+
+
+
+/*var svg = d3.select("body")
+            .append("svg")
+            .attr("width", w)
+            .attr("height", h);*/
+
+var svg = d3.select("#rankings");
+
+//var dataset = d3.json('data://Grade-8-Schools.json');
+var dataset = 
+[
+    {
+        "name": "Curro Academy Sandown: Maths Gr.10",
+        "rankings": [
+            2.0,
+            2.0,
+            2.0,
+            2.0,
+            2.0,
+            2.0,
+            2.0,
+            2.0,
+            2.0,
+            1.0,
+            1.0
+        ],
+        "score": 105.0
+    },
+    {
+        "name": "Curro Academy Protea Glen: Gr10K03 Maths OK",
+        "rankings": [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            2.0,
+            2.0
+        ],
+        "score": 103.5
+    },
+    {
+        "name": "Curro Academy Protea Glen: Gr10K01 Maths OK",
+        "rankings": [
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0
+        ],
+        "score": 80.0
+    },
+    {
+        "name": "Curro Academy Riverside: Mathematics Grade 10E",
+        "rankings": [
+            4.0,
+            4.0,
+            4.0,
+            4.0,
+            4.0,
+            5.0,
+            4.0,
+            4.0,
+            4.0,
+            4.0,
+            4.0
+        ],
+        "score": 77.0
+    },
+    {
+        "name": "Curro Academy Protea Glen: Gr10K03 Maths TN",
+        "rankings": [
+            16.0,
+            16.0,
+            16.0,
+            11.0,
+            6.0,
+            4.0,
+            5.0,
+            5.0,
+            5.0,
+            5.0,
+            5.0
+        ],
+        "score": 67.0
+    },
+    {
+        "name": "Curro Academy Protea Glen: Gr10K01. Maths TM",
+        "rankings": [
+            15.0,
+            15.0,
+            13.0,
+            14.0,
+            13.0,
+            8.0,
+            7.0,
+            6.0,
+            6.0,
+            6.0,
+            6.0
+        ],
+        "score": 56.0
+    },
+    {
+        "name": "Curro Academy Soshanguve: Gr 10 E2 Maths TR",
+        "rankings": [
+            5.0,
+            5.0,
+            5.0,
+            5.0,
+            5.0,
+            6.0,
+            6.0,
+            7.0,
+            7.0,
+            7.0,
+            7.0
+        ],
+        "score": 51.5
+    },
+    {
+        "name": "Curro The King's School Linbro: Gr10-E1 Maths AJ",
+        "rankings": [
+            9.0,
+            9.0,
+            9.0,
+            10.0,
+            10.0,
+            10.0,
+            10.0,
+            11.0,
+            11.0,
+            8.0,
+            8.0
+        ],
+        "score": 48.0
+    },
+    {
+        "name": "Curro Academy Soshanguve: Gr 10 E1 Maths MM",
+        "rankings": [
+            6.0,
+            6.0,
+            6.0,
+            6.0,
+            7.0,
+            7.0,
+            8.0,
+            8.0,
+            8.0,
+            9.0,
+            9.0
+        ],
+        "score": 47.0
+    },
+    {
+        "name": "Curro Academy Soshanguve: Gr 10 E3 Maths TR",
+        "rankings": [
+            7.0,
+            7.0,
+            7.0,
+            8.0,
+            9.0,
+            11.0,
+            11.0,
+            9.0,
+            9.0,
+            10.0,
+            10.0
+        ],
+        "score": 47.0
+    },
+    {
+        "name": "Curro Academy Clayville: Gr 10E1 Maths WB",
+        "rankings": [
+            8.0,
+            8.0,
+            8.0,
+            7.0,
+            8.0,
+            9.0,
+            9.0,
+            10.0,
+            10.0,
+            11.0,
+            11.0
+        ],
+        "score": 44.0
+    },
+    {
+        "name": "Curro Academy Soshanguve: Gr 10 E5 Maths LM",
+        "rankings": [
+            11.0,
+            11.0,
+            10.0,
+            9.0,
+            12.0,
+            12.0,
+            12.0,
+            12.0,
+            12.0,
+            12.0,
+            12.0
+        ],
+        "score": 43.0
+    },
+    {
+        "name": "Curro The King's School Linbro: Gr10-E2 Maths AJ",
+        "rankings": [
+            10.0,
+            10.0,
+            11.0,
+            12.0,
+            11.0,
+            13.0,
+            13.0,
+            13.0,
+            13.0,
+            13.0,
+            13.0
+        ],
+        "score": 40.0
+    },
+    {
+        "name": "Curro The King's School Linbro: Gr10-E3 Maths PR",
+        "rankings": [
+            12.0,
+            12.0,
+            12.0,
+            13.0,
+            14.0,
+            14.0,
+            14.0,
+            14.0,
+            14.0,
+            14.0,
+            14.0
+        ],
+        "score": 35.5
+    },
+    {
+        "name": "Meridian Rustenburg: Maths Grade 10Key4",
+        "rankings": [
+            13.0,
+            13.0,
+            14.0,
+            15.0,
+            15.0,
+            15.0,
+            15.0,
+            15.0,
+            15.0,
+            15.0,
+            15.0
+        ],
+        "score": 30.0
+    },
+    {
+        "name": "Curro Academy Wilgeheuwel: Mathematics Grade 10K1",
+        "rankings": [
+            14.0,
+            14.0,
+            15.0,
+            16.0,
+            16.0,
+            16.0,
+            16.0,
+            16.0,
+            16.0,
+            16.0,
+            16.0
+        ],
+        "score": 25.0
+    },
+    {
+        "name": "Northern Academy Secondary School: Grade 10 Key 1 Maths - Matewe",
+        "rankings": [
+            20.0,
+            20.0,
+            21.0,
+            21.0,
+            21.0,
+            19.0,
+            17.0,
+            17.0,
+            17.0,
+            17.0,
+            17.0
+        ],
+        "score": 24.5
+    },
+    {
+        "name": "Northern Academy Secondary School: Grade 10 Key 1 Maths - Ndlovu",
+        "rankings": [
+            22.0,
+            22.0,
+            23.0,
+            24.0,
+            25.0,
+            24.0,
+            24.0,
+            20.0,
+            19.0,
+            18.0,
+            18.0
+        ],
+        "score": 22.0
+    },
+    {
+        "name": "Meridian Pinehurst Private School: Maths Gr.10 AS",
+        "rankings": [
+            35.0,
+            35.0,
+            35.0,
+            36.0,
+            37.0,
+            33.0,
+            34.0,
+            29.0,
+            25.0,
+            19.0,
+            19.0
+        ],
+        "score": 21.5
+    },
+    {
+        "name": "Curro Academy Parkdene: Gr 10 Maths Key 1 ",
+        "rankings": [
+            17.0,
+            17.0,
+            17.0,
+            17.0,
+            17.0,
+            17.0,
+            18.0,
+            18.0,
+            18.0,
+            20.0,
+            20.0
+        ],
+        "score": 21.0
+    },
+    {
+        "name": "Northern Academy Secondary School: Grade 10 Key 3 Maths - Matewe",
+        "rankings": [
+            27.0,
+            27.0,
+            28.0,
+            29.0,
+            23.0,
+            20.0,
+            21.0,
+            21.0,
+            21.0,
+            24.0,
+            21.0
+        ],
+        "score": 21.0
+    },
+    {
+        "name": "Northern Academy Secondary School: Grade 10 Key 4 Maths - Matewe (1)",
+        "rankings": [
+            28.0,
+            28.0,
+            29.0,
+            30.0,
+            30.0,
+            26.0,
+            25.0,
+            22.0,
+            22.0,
+            21.0,
+            22.0
+        ],
+        "score": 21.0
+    },
+    {
+        "name": "Curro Academy Parkdene: Gr 10 Maths Key 2 SS",
+        "rankings": [
+            18.0,
+            18.0,
+            18.0,
+            18.0,
+            18.0,
+            18.0,
+            19.0,
+            19.0,
+            20.0,
+            22.0,
+            23.0
+        ],
+        "score": 20.0
+    },
+    {
+        "name": "Curro Somerset West: Maths Gr.10 AK",
+        "rankings": [
+            30.0,
+            30.0,
+            20.0,
+            19.0,
+            19.0,
+            21.0,
+            20.0,
+            23.0,
+            23.0,
+            23.0,
+            24.0
+        ],
+        "score": 20.0
+    },
+    {
+        "name": "Northern Academy Secondary School: Grade 10 Key 6 Maths - Ndlovu",
+        "rankings": [
+            31.0,
+            31.0,
+            31.0,
+            31.0,
+            31.0,
+            31.0,
+            31.0,
+            25.0,
+            26.0,
+            25.0,
+            25.0
+        ],
+        "score": 20.0
+    },
+    {
+        "name": "Curro Vanderbijlpark: Grade 10E3",
+        "rankings": [
+            21.0,
+            21.0,
+            22.0,
+            23.0,
+            22.0,
+            23.0,
+            23.0,
+            24.0,
+            24.0,
+            26.0,
+            26.0
+        ],
+        "score": 19.5
+    },
+    {
+        "name": "Curro Academy Pretoria: Gr 10E6 Maths FM",
+        "rankings": [
+            23.0,
+            23.0,
+            24.0,
+            25.0,
+            26.0,
+            27.0,
+            28.0,
+            30.0,
+            30.0,
+            27.0,
+            27.0
+        ],
+        "score": 18.0
+    },
+    {
+        "name": "Curro Krugersdorp: Maths Grade10 Group3",
+        "rankings": [
+            19.0,
+            19.0,
+            19.0,
+            20.0,
+            20.0,
+            22.0,
+            22.0,
+            26.0,
+            27.0,
+            28.0,
+            28.0
+        ],
+        "score": 18.0
+    },
+    {
+        "name": "Curro Vanderbijlpark: Grade 10E1",
+        "rankings": [
+            26.0,
+            26.0,
+            27.0,
+            28.0,
+            29.0,
+            30.0,
+            27.0,
+            28.0,
+            28.0,
+            29.0,
+            29.0
+        ],
+        "score": 18.0
+    },
+    {
+        "name": "Curro Academy Pretoria: Gr 10E2 Maths FM",
+        "rankings": [
+            46.0,
+            46.0,
+            46.0,
+            46.0,
+            49.0,
+            47.0,
+            48.0,
+            43.0,
+            44.0,
+            30.0,
+            30.0
+        ],
+        "score": 16.0
+    },
+    {
+        "name": "Curro Heuwelkruin: Maths Grade10 AE2 ",
+        "rankings": [
+            29.0,
+            29.0,
+            30.0,
+            22.0,
+            24.0,
+            25.0,
+            26.0,
+            27.0,
+            29.0,
+            31.0,
+            31.0
+        ],
+        "score": 16.0
+    },
+    {
+        "name": "Curro Heuwelkruin: Maths Grade10 AE3",
+        "rankings": [
+            24.0,
+            24.0,
+            25.0,
+            26.0,
+            27.0,
+            28.0,
+            29.0,
+            31.0,
+            31.0,
+            32.0,
+            32.0
+        ],
+        "score": 15.0
+    },
+    {
+        "name": "Curro St Dominics: Maths Grade 10EP",
+        "rankings": [
+            25.0,
+            25.0,
+            26.0,
+            27.0,
+            28.0,
+            29.0,
+            30.0,
+            32.0,
+            32.0,
+            33.0,
+            33.0
+        ],
+        "score": 15.0
+    },
+    {
+        "name": "Northern Academy Secondary School: Grade 10 Key 2 Maths - Matewe",
+        "rankings": [
+            36.0,
+            36.0,
+            36.0,
+            37.0,
+            34.0,
+            34.0,
+            35.0,
+            33.0,
+            33.0,
+            34.0,
+            34.0
+        ],
+        "score": 15.0
+    },
+    {
+        "name": "Curro Bankenveld School: Grade 10",
+        "rankings": [
+            41.0,
+            41.0,
+            41.0,
+            41.0,
+            44.0,
+            45.0,
+            43.0,
+            38.0,
+            37.0,
+            35.0,
+            35.0
+        ],
+        "score": 14.0
+    },
+    {
+        "name": "Curro Heuwelkruin: Maths Grade 10AE1",
+        "rankings": [
+            32.0,
+            32.0,
+            32.0,
+            32.0,
+            32.0,
+            32.0,
+            32.0,
+            34.0,
+            34.0,
+            36.0,
+            36.0
+        ],
+        "score": 14.0
+    },
+    {
+        "name": "Curro St Dominics: Maths Grade 10TG",
+        "rankings": [
+            40.0,
+            40.0,
+            40.0,
+            40.0,
+            42.0,
+            37.0,
+            33.0,
+            35.0,
+            35.0,
+            37.0,
+            37.0
+        ],
+        "score": 14.0
+    },
+    {
+        "name": "Meridian Pinehurst Private School: Maths Gr.10 CBR",
+        "rankings": [
+            56.0,
+            56.0,
+            56.0,
+            53.0,
+            53.0,
+            44.0,
+            46.0,
+            49.0,
+            46.0,
+            46.0,
+            38.0
+        ],
+        "score": 14.0
+    },
+    {
+        "name": "Northern Academy Secondary School: Grade 10 Key 6 Maths - Matewe",
+        "rankings": [
+            38.0,
+            38.0,
+            38.0,
+            38.0,
+            38.0,
+            39.0,
+            41.0,
+            36.0,
+            36.0,
+            38.0,
+            39.0
+        ],
+        "score": 14.0
+    },
+    {
+        "name": "Meridian Pinehurst Private School: Maths Gr.10 MSC",
+        "rankings": [
+            47.0,
+            47.0,
+            47.0,
+            47.0,
+            41.0,
+            40.0,
+            42.0,
+            44.0,
+            38.0,
+            39.0,
+            40.0
+        ],
+        "score": 13.0
+    },
+    {
+        "name": "Curro Rivonia: Maths Grade 10SM",
+        "rankings": [
+            33.0,
+            33.0,
+            33.0,
+            33.0,
+            33.0,
+            35.0,
+            36.0,
+            37.0,
+            39.0,
+            40.0,
+            41.0
+        ],
+        "score": 12.5
+    },
+    {
+        "name": "Curro Bloemfontein School: Maths Grade 10 Fellows",
+        "rankings": [
+            34.0,
+            34.0,
+            34.0,
+            34.0,
+            35.0,
+            36.0,
+            37.0,
+            39.0,
+            40.0,
+            41.0,
+            42.0
+        ],
+        "score": 12.0
+    },
+    {
+        "name": "Curro Vanderbijlpark: Grade 10E2",
+        "rankings": [
+            37.0,
+            37.0,
+            37.0,
+            35.0,
+            36.0,
+            38.0,
+            38.0,
+            40.0,
+            41.0,
+            42.0,
+            43.0
+        ],
+        "score": 12.0
+    },
+    {
+        "name": "Curro Waterstone College: Maths Grade10 E1",
+        "rankings": [
+            50.0,
+            50.0,
+            50.0,
+            51.0,
+            48.0,
+            50.0,
+            39.0,
+            41.0,
+            42.0,
+            43.0,
+            44.0
+        ],
+        "score": 12.0
+    },
+    {
+        "name": "Curro Academy Pretoria: Gr 10E1 Maths VM",
+        "rankings": [
+            39.0,
+            39.0,
+            39.0,
+            39.0,
+            39.0,
+            41.0,
+            40.0,
+            42.0,
+            43.0,
+            44.0,
+            45.0
+        ],
+        "score": 11.0
+    },
+    {
+        "name": "Curro Helderwyk: Maths 10.2",
+        "rankings": [
+            52.0,
+            52.0,
+            52.0,
+            54.0,
+            57.0,
+            57.0,
+            57.0,
+            58.0,
+            50.0,
+            45.0,
+            46.0
+        ],
+        "score": 10.5
+    },
+    {
+        "name": "Northern Academy Secondary School: Grade 10 Key 4 Maths - Maromani (1)",
+        "rankings": [
+            42.0,
+            42.0,
+            42.0,
+            42.0,
+            45.0,
+            46.0,
+            47.0,
+            46.0,
+            47.0,
+            47.0,
+            47.0
+        ],
+        "score": 10.5
+    },
+    {
+        "name": "Curro Klerksdorp: Maths Grade 10E3 GB",
+        "rankings": [
+            49.0,
+            49.0,
+            49.0,
+            49.0,
+            40.0,
+            42.0,
+            44.0,
+            45.0,
+            45.0,
+            48.0,
+            48.0
+        ],
+        "score": 10.0
+    },
+    {
+        "name": "Curro Rivonia: Maths Grade 10GR",
+        "rankings": [
+            45.0,
+            45.0,
+            45.0,
+            45.0,
+            43.0,
+            43.0,
+            45.0,
+            47.0,
+            48.0,
+            49.0,
+            49.0
+        ],
+        "score": 8.5
+    },
+    {
+        "name": "Meridian Karino Independent School: Grade 10E1",
+        "rankings": [
+            63.0,
+            63.0,
+            63.0,
+            65.0,
+            52.0,
+            53.0,
+            54.0,
+            48.0,
+            49.0,
+            50.0,
+            50.0
+        ],
+        "score": 8.5
+    },
+    {
+        "name": "Curro Kathu: Maths Gr.10_RB",
+        "rankings": [
+            43.0,
+            43.0,
+            43.0,
+            43.0,
+            46.0,
+            48.0,
+            49.0,
+            50.0,
+            51.0,
+            51.0,
+            51.0
+        ],
+        "score": 7.5
+    },
+    {
+        "name": "Curro Krugersdorp: Maths Grade10 Group2",
+        "rankings": [
+            44.0,
+            44.0,
+            44.0,
+            44.0,
+            47.0,
+            49.0,
+            50.0,
+            51.0,
+            52.0,
+            52.0,
+            52.0
+        ],
+        "score": 7.5
+    },
+    {
+        "name": "Curro Academy Mahikeng: Gr 10 Key 4 Maths TP",
+        "rankings": [
+            73.0,
+            74.0,
+            74.0,
+            71.0,
+            72.0,
+            72.0,
+            72.0,
+            68.0,
+            53.0,
+            53.0,
+            53.0
+        ],
+        "score": 7.0
+    },
+    {
+        "name": "Meridian Rustenburg: Maths Grade 10Key5",
+        "rankings": [
+            51.0,
+            51.0,
+            51.0,
+            52.0,
+            54.0,
+            54.0,
+            55.0,
+            55.0,
+            54.0,
+            54.0,
+            54.0
+        ],
+        "score": 7.0
+    },
+    {
+        "name": "Curro Academy Mahikeng: Gr 10 Key 3 Maths TP",
+        "rankings": [
+            64.0,
+            64.0,
+            64.0,
+            58.0,
+            61.0,
+            62.0,
+            62.0,
+            64.0,
+            55.0,
+            55.0,
+            55.0
+        ],
+        "score": 6.0
+    },
+    {
+        "name": "Curro Academy Wilgeheuwel: Mathematics Grade 10K4",
+        "rankings": [
+            48.0,
+            48.0,
+            48.0,
+            48.0,
+            50.0,
+            51.0,
+            51.0,
+            52.0,
+            56.0,
+            56.0,
+            56.0
+        ],
+        "score": 6.0
+    },
+    {
+        "name": "Curro Edenvale: Gr 10 E3 Maths MM",
+        "rankings": [
+            58.0,
+            58.0,
+            58.0,
+            60.0,
+            55.0,
+            55.0,
+            52.0,
+            53.0,
+            57.0,
+            57.0,
+            57.0
+        ],
+        "score": 6.0
+    },
+    {
+        "name": "Curro Heritage House: Gr10 Maths LM/AS",
+        "rankings": [
+            71.0,
+            71.0,
+            71.0,
+            73.0,
+            71.0,
+            58.0,
+            58.0,
+            59.0,
+            58.0,
+            58.0,
+            58.0
+        ],
+        "score": 6.0
+    },
+    {
+        "name": "Curro Klerksdorp: Maths Grade 10E1 GB",
+        "rankings": [
+            59.0,
+            59.0,
+            59.0,
+            61.0,
+            58.0,
+            59.0,
+            59.0,
+            60.0,
+            59.0,
+            59.0,
+            59.0
+        ],
+        "score": 6.0
+    },
+    {
+        "name": "Curro Krugersdorp: Maths Grade10 Group1",
+        "rankings": [
+            76.0,
+            77.0,
+            77.0,
+            50.0,
+            51.0,
+            52.0,
+            53.0,
+            54.0,
+            60.0,
+            60.0,
+            60.0
+        ],
+        "score": 6.0
+    },
+    {
+        "name": "Curro Waterstone College: Maths Grade10 E3/4",
+        "rankings": [
+            62.0,
+            62.0,
+            62.0,
+            64.0,
+            65.0,
+            66.0,
+            66.0,
+            57.0,
+            61.0,
+            61.0,
+            61.0
+        ],
+        "score": 6.0
+    },
+    {
+        "name": "Curro Secunda: Maths01 Grade 10",
+        "rankings": [
+            54.0,
+            54.0,
+            54.0,
+            56.0,
+            56.0,
+            56.0,
+            56.0,
+            56.0,
+            62.0,
+            62.0,
+            62.0
+        ],
+        "score": 5.5
+    },
+    {
+        "name": "Curro Kathu: Maths.Gr10_LK",
+        "rankings": [
+            61.0,
+            61.0,
+            61.0,
+            63.0,
+            64.0,
+            65.0,
+            65.0,
+            67.0,
+            63.0,
+            63.0,
+            63.0
+        ],
+        "score": 5.0
+    },
+    {
+        "name": "Curro Klerksdorp: Maths Grade 10E2 BG",
+        "rankings": [
+            53.0,
+            53.0,
+            53.0,
+            55.0,
+            59.0,
+            60.0,
+            60.0,
+            61.0,
+            64.0,
+            64.0,
+            64.0
+        ],
+        "score": 5.0
+    },
+    {
+        "name": "Curro Waterstone College: Maths Grade10 E2",
+        "rankings": [
+            55.0,
+            55.0,
+            55.0,
+            57.0,
+            60.0,
+            61.0,
+            61.0,
+            62.0,
+            65.0,
+            65.0,
+            65.0
+        ],
+        "score": 5.0
+    },
+    {
+        "name": "Meridian Karino Independent School: Grade 10E3",
+        "rankings": [
+            78.0,
+            78.0,
+            78.0,
+            78.0,
+            78.0,
+            78.0,
+            78.0,
+            63.0,
+            66.0,
+            66.0,
+            66.0
+        ],
+        "score": 5.0
+    },
+    {
+        "name": "Curro Academy Mahikeng: Gr 10 Key 1 Maths TP",
+        "rankings": [
+            79.0,
+            79.0,
+            79.0,
+            79.0,
+            79.0,
+            79.0,
+            79.0,
+            79.0,
+            69.0,
+            67.0,
+            67.0
+        ],
+        "score": 4.0
+    },
+    {
+        "name": "Curro Century City: Maths Gr.10E 1,2",
+        "rankings": [
+            57.0,
+            57.0,
+            57.0,
+            59.0,
+            62.0,
+            63.0,
+            63.0,
+            65.0,
+            67.0,
+            68.0,
+            68.0
+        ],
+        "score": 4.0
+    },
+    {
+        "name": "Curro Waterstone College: Maths Grade 10E5/6",
+        "rankings": [
+            60.0,
+            60.0,
+            60.0,
+            62.0,
+            63.0,
+            64.0,
+            64.0,
+            66.0,
+            68.0,
+            69.0,
+            69.0
+        ],
+        "score": 4.0
+    },
+    {
+        "name": "Curro Academy Mahikeng: Gr 10 Key 6 Maths TP",
+        "rankings": [
+            74.0,
+            75.0,
+            75.0,
+            76.0,
+            77.0,
+            77.0,
+            77.0,
+            78.0,
+            70.0,
+            70.0,
+            70.0
+        ],
+        "score": 3.0
+    },
+    {
+        "name": "Curro Academy Wilgeheuwel: Mathematics Grade 10K3",
+        "rankings": [
+            65.0,
+            65.0,
+            65.0,
+            66.0,
+            66.0,
+            67.0,
+            67.0,
+            69.0,
+            71.0,
+            71.0,
+            71.0
+        ],
+        "score": 3.0
+    },
+    {
+        "name": "Curro Century City: Maths Gr.10E 3",
+        "rankings": [
+            75.0,
+            76.0,
+            76.0,
+            77.0,
+            73.0,
+            73.0,
+            73.0,
+            74.0,
+            72.0,
+            72.0,
+            72.0
+        ],
+        "score": 3.0
+    },
+    {
+        "name": "Curro Century City: Maths Gr.10E 4",
+        "rankings": [
+            66.0,
+            66.0,
+            66.0,
+            67.0,
+            67.0,
+            68.0,
+            68.0,
+            70.0,
+            73.0,
+            73.0,
+            73.0
+        ],
+        "score": 3.0
+    },
+    {
+        "name": "Curro Creston College: Grade 10 Maths JL",
+        "rankings": [
+            67.0,
+            67.0,
+            67.0,
+            68.0,
+            68.0,
+            69.0,
+            69.0,
+            71.0,
+            74.0,
+            74.0,
+            74.0
+        ],
+        "score": 3.0
+    },
+    {
+        "name": "Curro Helderwyk: Maths 10.3",
+        "rankings": [
+            68.0,
+            68.0,
+            68.0,
+            69.0,
+            69.0,
+            70.0,
+            70.0,
+            72.0,
+            75.0,
+            75.0,
+            75.0
+        ],
+        "score": 3.0
+    },
+    {
+        "name": "Curro Edenvale: Gr 10 E1 Maths BE",
+        "rankings": [
+            69.0,
+            69.0,
+            69.0,
+            70.0,
+            70.0,
+            71.0,
+            71.0,
+            73.0,
+            76.0,
+            76.0,
+            76.0
+        ],
+        "score": 2.5
+    },
+    {
+        "name": "Curro Edenvale: Gr 10 E2 Maths BE",
+        "rankings": [
+            70.0,
+            70.0,
+            70.0,
+            72.0,
+            74.0,
+            74.0,
+            74.0,
+            75.0,
+            77.0,
+            77.0,
+            77.0
+        ],
+        "score": 2.0
+    },
+    {
+        "name": "Meridian Cosmo City: Maths Grade 10E2",
+        "rankings": [
+            77.0,
+            73.0,
+            73.0,
+            75.0,
+            76.0,
+            76.0,
+            76.0,
+            77.0,
+            78.0,
+            78.0,
+            78.0
+        ],
+        "score": 2.0
+    },
+    {
+        "name": "Curro Helderwyk: Maths 10.1",
+        "rankings": [
+            72.0,
+            72.0,
+            72.0,
+            74.0,
+            75.0,
+            75.0,
+            75.0,
+            76.0,
+            79.0,
+            79.0,
+            79.0
+        ],
+        "score": 1.5
+    },
+    {
+        "name": "Curro Academy Savanna City: Grade 10 Maths MK",
+        "rankings": [
+            80.0,
+            80.0,
+            80.0,
+            80.0,
+            80.0,
+            80.0,
+            80.0,
+            80.0,
+            80.0,
+            80.0,
+            80.0
+        ],
+        "score": 0.0
+    },
+    {
+        "name": "Curro Mossel Bay: Maths Grade 10AE1",
+        "rankings": [
+            81.0,
+            81.0,
+            81.0,
+            81.0,
+            81.0,
+            81.0,
+            81.0,
+            81.0,
+            81.0,
+            81.0,
+            81.0
+        ],
+        "score": 0.0
+    },
+    {
+        "name": "Curro Mossel Bay: Maths Grade 10AE2",
+        "rankings": [
+            82.0,
+            82.0,
+            82.0,
+            82.0,
+            82.0,
+            82.0,
+            82.0,
+            82.0,
+            82.0,
+            82.0,
+            82.0
+        ],
+        "score": 0.0
+    },
+    {
+        "name": "Curro Waterfall: Grade 10 Maths WK",
+        "rankings": [
+            83.0,
+            83.0,
+            83.0,
+            83.0,
+            83.0,
+            83.0,
+            83.0,
+            83.0,
+            83.0,
+            83.0,
+            83.0
+        ],
+        "score": 0.0
+    },
+    {
+        "name": "Meridian Cosmo City: Maths Grade 10E3",
+        "rankings": [
+            84.0,
+            84.0,
+            84.0,
+            84.0,
+            84.0,
+            84.0,
+            84.0,
+            84.0,
+            84.0,
+            84.0,
+            84.0
+        ],
+        "score": 0.0
+    },
+    {
+        "name": "Meridian Karino Independent School: Grade 10E2",
+        "rankings": [
+            85.0,
+            85.0,
+            85.0,
+            85.0,
+            85.0,
+            85.0,
+            85.0,
+            85.0,
+            85.0,
+            85.0,
+            85.0
+        ],
+        "score": 0.0
+    }
+];
+
+/*
+[
+    {
+        "name": "Curro The King's School Linbro Gr8-E1 Maths LD",
+        "rankings": [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ],
+        "score": 37.0
+    },
+    {
+        "name": "Curro The King's School Linbro Gr8-E3 Maths MD",
+        "rankings": [
+            2.0,
+            2.0,
+            2.0,
+            2.0,
+            2.0,
+            2.0,
+            2.0
+        ],
+        "score": 34.0
+    },
+    {
+        "name": "Curro The King's School Linbro Gr8-E2 Maths MD",
+        "rankings": [
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0
+        ],
+        "score": 24.0
+    },
+    {
+        "name": "Curro The King's School Linbro Gr8-E4 Maths MD",
+        "rankings": [
+            4.0,
+            4.0,
+            4.0,
+            4.0,
+            4.0,
+            4.0,
+            4.0
+        ],
+        "score": 15.0
+    }
+];
+*/
+
+var blue_to_brown = d3.scaleLinear()
+  .domain([1, dataset.length])
+  //.range(["steelblue", "brown"])
+  .range(["#0088b4", "#ef6a2c"])
+  .interpolate(d3.interpolateLab);
+
+
+/*
+var dataset = [
+
+];
+
+
+for (var k=0; k<weekcount; k++)
+{
+    var rankings = d3.shuffle(d3.range(1, schoolcount+1,1));
+    //var rankings = d3.range(1, schoolcount+1,1);
+    for (var j=0; j<schoolcount; j++)
+    {
+        if (k==0) {dataset.push(
+            {   
+            name : "Class " + j ,
+            rankings : [],
+            score: 0
+            }
+        );}
+        if (k==weekcount -1) 
+            {
+                dataset[j].rankings.push(dataset[j].rankings[k-1]);
+                dataset[j].score = 100 - dataset[j].rankings[k-1]*4; 
+            }
+        else{dataset[j].rankings.push(rankings[j]);}
+    }
+}
+
+dataset.sort(function(a, b) {
+                 return d3.ascending(a.rankings[a.rankings.length-1], b.rankings[b.rankings.length-1]);
+                            });
+*/
+
+var widths = (w)/(dataset.length);
+
+var xScale = d3.scaleBand()
+        .domain(d3.range(weekcount))
+        .rangeRound([padding, w-2*padding]);
+
+var yScale = d3.scaleBand()
+        .domain(d3.range(dataset.length))
+        .rangeRound([padding/4, max-2*padding]);
+
+var scoreScale = d3.scaleLinear()
+        .domain([0,dataset[0].score])
+        .range([0, 100]);
+
+var parallels = svg.selectAll("parallels")
+        .data(dataset[0].rankings)
+        .enter()
+        .append("line")
+        .attr("x1", function(d,i) {return xScale(i); })
+        .attr("x2", function(d,i) {return xScale(i);})
+        .attr("y1", function(d,i) {return yScale(dataset.length-1);})
+        .attr("y2", function(d,i) {return yScale(0);})
+        .attr("stroke-width",1)
+        .attr("stroke","#111");
+
+var weeklabels = svg.selectAll("weeklabels")
+    .data(dataset[0].rankings)
+    .enter()
+    .append("text")
+    .attr("x", function (d,i) {return xScale(i);} )
+    .attr("y", function(d,i) { return yScale(0)- 20 ;} )
+    .attr("font-size", 10)
+    .attr("text-anchor", "middle")
+    .text(function(d,i){ if (i <dataset[0].rankings.length-1) 
+                            {return "Week "+ (28+i+1);}
+                        else
+                            {return "Current";}
+                        });
+
+
+var paths = svg.selectAll("paths")
+        .data(dataset)
+        .enter()
+        .append("path")
+        .attr("d", function(d,i) 
+            {   
+                var x = xScale(0);
+                var y = yScale(d.rankings[0]-1);
+                var result = "M "+ x + " "+ y +" L ";
+                for (var j = 0; j < d.rankings.length ; j++)
+                {
+                    x = xScale(j);
+                    y = yScale(d.rankings[j]-1);
+                    result = result + x + " " + y  +",";
+                }
+                return result;
+            })
+        .attr("class",function(d,i){ return "SchoolClass" +i; })
+        .attr("id",function(d,i){ return "pathSchoolClass" +i; })
+        .attr("fill","none")
+        .attr("stroke-width",1)
+        .attr("stroke",function(d,i){ return blue_to_brown(d.rankings[d.rankings.length-1]);});
+        
+var labels = svg.selectAll("schools")
+    .data(dataset)
+    .enter()
+    .append("text")
+    .attr("x", function(d,i) { return xScale(d.rankings.length-1) + 15;} )
+    .attr("y", function(d)   { return yScale(d.rankings[d.rankings.length-1]-1)+5;} )
+//    .attr("text-anchor", "left")
+    .attr("font-size", 14)
+    .attr("class",function(d,i){ return "SchoolClass" +i; })
+    .classed("SchoolClass",true)
+    .attr("id",function(d,i){ return "SchoolClass" +i; })
+    //.attr("stroke",function(d,i){ return blue_to_brown(d[d.length-1]);})
+    .text(function(d,i){ return d.name;});
+   
+
+var scorebars = svg.selectAll("schools-scores")
+    .data(dataset)
+    .enter()
+    .append("rect")
+    .attr("x", function(d,i) { return xScale(dataset[0].rankings.length-1) + 400;} )
+    .attr("y", function(d,i) { return yScale(i)-5;} )
+    .attr("height", function(d,i) { return 10;} )
+    .attr("width", function(d,i) { return  scoreScale(d.score);} )
+    .attr("fill",function(d,i){ return blue_to_brown(i);})
+    .attr("class",function(d,i){ return "SchoolClass" +i; })
+    .attr("id",function(d,i){ return "barSchoolClass" +i; })
+    .attr("stroke-width", 1)
+    .attr("stroke",function(d,i){ return "gray";});
+   
+
+
+ 
+var positions = svg.selectAll("positions")
+    .data(dataset)
+    .enter()
+    .append("text")
+    .attr("x", xScale(0) - 20 )
+    .attr("y", function(d,i) { return yScale(i) +7 ;} )
+    .attr("font-size", 14)
+    .attr("text-anchor", "end")
+    .text(function(d,i){ if (i ==0 ) { return "Position: "+ (i+1); } else { return i+1;}});
+
+var xAxis = d3.axisBottom()
+                  .scale(scoreScale)
+                  .ticks(5);  //Set rough # of ticks
+
+
+
+d3.selectAll(".SchoolClass")
+   .on("mouseover", function() {
+   var id = d3.select(this).attr("id");
+   svg.selectAll("path").attr("opacity",.4);
+   
+   d3.select(this)
+            .attr("font-weight", "bold");
+   
+   d3.selectAll("#path"+id)
+            .attr("stroke",function(d,i){ return blue_to_brown(d.rankings[d.rankings.length-1]);})
+            .attr("stroke-width", 5)
+            .attr("opacity",1);
+
+   d3.selectAll("#bar"+id)
+            .attr("stroke",function(d,i){ return "black";});
+
+   })
+   .on("mouseout", function() {
+        var id = d3.select(this).attr("id");
+        svg.selectAll("path").attr("stroke",function(d,i){ return blue_to_brown(d.rankings[d.rankings.length-1]);})
+        .attr("opacity",1);
+   
+        d3.selectAll("."+id)
+            .attr("font-weight", "normal");
+        d3.selectAll("#path"+id)
+            .attr("stroke-width", 1);
+        d3.selectAll("#bar"+id)
+            .attr("stroke",function(d,i){ return "gray";});
+    }) ;
+
+
+/*
+svg.append("g")
+    .attr("class", "axis")
+    .attr("transform", "translate(" + ((xScale(5) + 135)) + ","+( yScale(schoolcount-1)+7)+")")
+    .call(xAxis);
+*/
+/*
+
+var lines = svg.selectAll("lines")
+        .data(dataset)
+        .enter()
+        .append("line")
+        .attr("x1", function(d,i) {return 50+0*50;})
+        .attr("y1", function(d,i) {return 50+(d[0]-1)*50;})
+        .attr("x2", function(d,i) {return 50+1*50;})
+        .attr("y2", function(d,i) {return 50+(d[1]-1)*50;})
+        .attr("x3", function(d,i) {return 50+2*50;})
+        .attr("y3", function(d,i) {return 50+(d[2]-1)*50;})
+        .attr("x4", function(d,i) {return 50+3*50;})
+        .attr("y4", function(d,i) {return 50+(d[3]-1)*50;})
+        .attr("x5", function(d,i) {return 50+4*50;})
+        .attr("y5", function(d,i) {return 50+(d[4]-1)*50;})
+        .attr("x6", function(d,i) {return 50+5*50;})
+        .attr("y6", function(d,i) {return 50+(d[5]-1)*50;})
+        .attr("x7", function(d,i) {return 50+6*50;})
+        .attr("y7", function(d,i) {return 50+(d[6]-1)*50;})
+        .attr("stroke-width",2)
+        .attr("stroke",function(d,i){ if (i == 0) {return "black";}else{return "red";}});
+ */
+
+
+        </script>
+    </body>
+</html> 
