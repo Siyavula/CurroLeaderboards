@@ -1,0 +1,2693 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Curro Rankings 2023</title>
+        <!--<script type="text/javascript" src="d3/d3.v3.js"></script>-->
+        <style>
+svg .pumpkin {
+    fill: yellow;
+    stroke: orange;
+    stroke-width: 5;
+ }
+
+svg .axis path,
+svg .axis line {
+    fill: none;
+    stroke: #444;
+    shape-rendering: crispEdges;
+}
+
+svg .axis text {
+    font-family: sans-serif;
+    font-size: 11px;
+}
+
+p.caption {
+    font-size:.8em;
+    padding-top:1em;
+    padding-bottom:1em;
+    text-align:center;
+}
+
+div.container {
+    width:800px;
+    margin-left:  auto;
+    margin-right: auto;
+}
+
+div.bar {
+    display: inline-block;
+    width: 20px;
+    height: 75px;   /* We'll override this later */
+    background-color: teal;
+    margin-right:2px;
+}
+</style>
+    </head>
+    <body>
+        <div style="height: 54px; width:100%; background-color: #003B6F;"> 
+            <div align=center>
+                <img src="curro-logo-1.png" width="120" class="logo-136-lg">
+            </div>
+        </div>
+    <div class="container">
+        <h2>Curro - Classes Leaderboard - Grade 8</h2>
+        <a href="index.html">Schools Gr. 8</a> | <a href="schools-9.html">Schools Gr. 9</a> | <a href="schools-10.html">Schools Gr. 10</a> | <a href="schools-11.html">Schools Gr. 11</a> | <a href="schools-12.html">Schools Gr. 12</a><br/>
+        <a href="classes-8.html">Classes Gr. 8</a> | <a href="classes-9.html">Classes Gr. 9</a> | <a href="classes-10.html">Classes Gr. 10</a> | <a href="classes-11.html">Classes Gr. 11</a> | <a href="classes-12.html">Classes Gr. 12</a>
+        <p class="caption"> All schools and classes that are participating and have started practising are listed below. 
+            They are listed in the order of their current ranking. 
+            You can see the changes in ranking of the schools/classes in the weekly rankings.
+            A school/class will be <strong>highlighted</strong> if you move your cursor over the name.</p>
+        <svg id="rankings" width=1000 height=1600></svg>
+    </div>
+
+<!--        <script type="text/javascript"> -->
+
+<script type="module">
+
+import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
+
+
+var weekcount = 9; /* add a fake last week */
+var schoolcount = 20;
+
+var w = 700;
+var h = 1600;
+var max = 1600;
+var padding = 100;
+var colours = ["yellow", "red", "green", "blue", "orange","brown","yellow"];
+
+
+
+
+/*var svg = d3.select("body")
+            .append("svg")
+            .attr("width", w)
+            .attr("height", h);*/
+
+var svg = d3.select("#rankings");
+
+//var dataset = d3.json('data://Grade-8-Schools.json');
+var dataset = 
+[
+    {
+        "name": "Curro Academy Protea Glen: Grade 8E3 TN",
+        "rankings": [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ],
+        "score": 75.5
+    },
+    {
+        "name": "Curro Academy Protea Glen: Grade 8E4 TN",
+        "rankings": [
+            4.0,
+            3.0,
+            3.0,
+            3.0,
+            2.0,
+            2.0,
+            2.0,
+            2.0,
+            2.0
+        ],
+        "score": 71.0
+    },
+    {
+        "name": "Curro Academy Protea Glen: Grade 8E1 KM",
+        "rankings": [
+            2.0,
+            2.0,
+            2.0,
+            2.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0
+        ],
+        "score": 58.0
+    },
+    {
+        "name": "Curro Waterfall: Grade 8E1",
+        "rankings": [
+            8.0,
+            8.0,
+            5.0,
+            6.0,
+            6.0,
+            6.0,
+            4.0,
+            4.0,
+            4.0
+        ],
+        "score": 48.0
+    },
+    {
+        "name": "Curro Somerset West: Maths Grade 8 E3 AK",
+        "rankings": [
+            5.0,
+            5.0,
+            6.0,
+            5.0,
+            5.0,
+            5.0,
+            6.0,
+            5.0,
+            5.0
+        ],
+        "score": 45.0
+    },
+    {
+        "name": "Curro Academy Sandown: Maths Gr.8E1",
+        "rankings": [
+            3.0,
+            4.0,
+            4.0,
+            4.0,
+            4.0,
+            4.0,
+            5.0,
+            6.0,
+            6.0
+        ],
+        "score": 44.0
+    },
+    {
+        "name": "Curro Academy Protea Glen: Grade 8E2 KM",
+        "rankings": [
+            18.0,
+            17.0,
+            13.0,
+            8.0,
+            7.0,
+            7.0,
+            7.0,
+            7.0,
+            7.0
+        ],
+        "score": 42.0
+    },
+    {
+        "name": "Curro The King's School Linbro: Gr8-E1 Maths LD",
+        "rankings": [
+            6.0,
+            6.0,
+            7.0,
+            7.0,
+            8.0,
+            8.0,
+            8.0,
+            8.0,
+            8.0
+        ],
+        "score": 37.0
+    },
+    {
+        "name": "Curro Academy Pretoria: Grade 8E1 AZ",
+        "rankings": [
+            12.0,
+            12.0,
+            12.0,
+            13.0,
+            13.0,
+            12.0,
+            11.0,
+            9.0,
+            9.0
+        ],
+        "score": 35.0
+    },
+    {
+        "name": "Curro Academy Sandown: Maths Gr.8E2",
+        "rankings": [
+            9.0,
+            9.0,
+            9.0,
+            10.0,
+            10.0,
+            10.0,
+            9.0,
+            10.0,
+            10.0
+        ],
+        "score": 35.0
+    },
+    {
+        "name": "Curro Secunda: Maths Grade 8E2",
+        "rankings": [
+            45.0,
+            40.0,
+            33.0,
+            31.0,
+            19.0,
+            14.0,
+            12.0,
+            12.0,
+            11.0
+        ],
+        "score": 34.5
+    },
+    {
+        "name": "Curro The King's School Linbro: Gr8-E3 Maths MD",
+        "rankings": [
+            7.0,
+            7.0,
+            8.0,
+            9.0,
+            9.0,
+            9.0,
+            10.0,
+            11.0,
+            12.0
+        ],
+        "score": 34.0
+    },
+    {
+        "name": "Meridian Rustenburg: Grade 8E1",
+        "rankings": [
+            11.0,
+            11.0,
+            11.0,
+            12.0,
+            12.0,
+            13.0,
+            14.0,
+            13.0,
+            13.0
+        ],
+        "score": 32.0
+    },
+    {
+        "name": "Northern Academy Secondary School: Gr 8E12 Maths Maromani",
+        "rankings": [
+            10.0,
+            10.0,
+            10.0,
+            11.0,
+            11.0,
+            11.0,
+            13.0,
+            14.0,
+            14.0
+        ],
+        "score": 31.5
+    },
+    {
+        "name": "Curro Bankenveld School: Grade 8E3",
+        "rankings": [
+            14.0,
+            14.0,
+            14.0,
+            14.0,
+            14.0,
+            15.0,
+            15.0,
+            15.0,
+            15.0
+        ],
+        "score": 26.0
+    },
+    {
+        "name": "Meridian Rustenburg: Grade 8E2",
+        "rankings": [
+            13.0,
+            13.0,
+            15.0,
+            15.0,
+            15.0,
+            16.0,
+            16.0,
+            16.0,
+            16.0
+        ],
+        "score": 25.5
+    },
+    {
+        "name": "Meridian Rustenburg: Grade 8E4",
+        "rankings": [
+            16.0,
+            16.0,
+            17.0,
+            17.0,
+            18.0,
+            19.0,
+            19.0,
+            17.0,
+            17.0
+        ],
+        "score": 24.5
+    },
+    {
+        "name": "Curro Academy Pretoria: Grade 8E4 AZ",
+        "rankings": [
+            21.0,
+            22.0,
+            22.0,
+            22.0,
+            24.0,
+            22.0,
+            23.0,
+            18.0,
+            18.0
+        ],
+        "score": 24.0
+    },
+    {
+        "name": "Curro The King's School Linbro: Gr8-E2 Maths MD",
+        "rankings": [
+            19.0,
+            20.0,
+            20.0,
+            19.0,
+            16.0,
+            17.0,
+            17.0,
+            19.0,
+            19.0
+        ],
+        "score": 24.0
+    },
+    {
+        "name": "Curro Waterfall: Grade 8E3",
+        "rankings": [
+            15.0,
+            15.0,
+            16.0,
+            16.0,
+            17.0,
+            18.0,
+            18.0,
+            20.0,
+            20.0
+        ],
+        "score": 24.0
+    },
+    {
+        "name": "Northern Academy Secondary School: Gr 8E6 Maths Kampffer",
+        "rankings": [
+            29.0,
+            31.0,
+            28.0,
+            29.0,
+            30.0,
+            27.0,
+            28.0,
+            21.0,
+            21.0
+        ],
+        "score": 24.0
+    },
+    {
+        "name": "Curro Vanderbijlpark: Grade 8E2",
+        "rankings": [
+            22.0,
+            23.0,
+            21.0,
+            21.0,
+            23.0,
+            24.0,
+            26.0,
+            22.0,
+            22.0
+        ],
+        "score": 23.5
+    },
+    {
+        "name": "Curro Academy Pretoria: Grade 8E2 AZ",
+        "rankings": [
+            26.0,
+            27.0,
+            30.0,
+            26.0,
+            27.0,
+            25.0,
+            22.0,
+            23.0,
+            23.0
+        ],
+        "score": 23.0
+    },
+    {
+        "name": "Curro Somerset West: Grade 8 E1 AK",
+        "rankings": [
+            32.0,
+            18.0,
+            18.0,
+            18.0,
+            20.0,
+            20.0,
+            20.0,
+            24.0,
+            24.0
+        ],
+        "score": 23.0
+    },
+    {
+        "name": "Meridian Rustenburg: Grade 8E3",
+        "rankings": [
+            17.0,
+            19.0,
+            19.0,
+            20.0,
+            21.0,
+            21.0,
+            21.0,
+            25.0,
+            25.0
+        ],
+        "score": 23.0
+    },
+    {
+        "name": "Curro Bloemfontein School: Grade 8E1",
+        "rankings": [
+            20.0,
+            21.0,
+            23.0,
+            23.0,
+            22.0,
+            23.0,
+            24.0,
+            26.0,
+            26.0
+        ],
+        "score": 22.0
+    },
+    {
+        "name": "Curro Mossel Bay: Maths Grade 8A1",
+        "rankings": [
+            30.0,
+            32.0,
+            29.0,
+            30.0,
+            31.0,
+            29.0,
+            25.0,
+            27.0,
+            27.0
+        ],
+        "score": 22.0
+    },
+    {
+        "name": "Curro Vanderbijlpark: Grade 8E1",
+        "rankings": [
+            33.0,
+            34.0,
+            24.0,
+            24.0,
+            25.0,
+            26.0,
+            27.0,
+            28.0,
+            28.0
+        ],
+        "score": 21.0
+    },
+    {
+        "name": "Curro Roodeplaat: Gr 8E3 Maths LMS",
+        "rankings": [
+            24.0,
+            25.0,
+            26.0,
+            27.0,
+            28.0,
+            30.0,
+            29.0,
+            29.0,
+            29.0
+        ],
+        "score": 19.5
+    },
+    {
+        "name": "Curro Academy Parkdene: Grade 8E5 Maths SS",
+        "rankings": [
+            23.0,
+            24.0,
+            25.0,
+            25.0,
+            26.0,
+            28.0,
+            30.0,
+            30.0,
+            30.0
+        ],
+        "score": 19.0
+    },
+    {
+        "name": "Curro Somerset West: Grade 8 E2 AK",
+        "rankings": [
+            25.0,
+            26.0,
+            27.0,
+            28.0,
+            29.0,
+            31.0,
+            31.0,
+            31.0,
+            31.0
+        ],
+        "score": 19.0
+    },
+    {
+        "name": "Curro Academy Pretoria: Grade 8E6 LC",
+        "rankings": [
+            34.0,
+            35.0,
+            38.0,
+            32.0,
+            33.0,
+            34.0,
+            35.0,
+            32.0,
+            32.0
+        ],
+        "score": 18.5
+    },
+    {
+        "name": "Curro Heritage House: Grade 8E3",
+        "rankings": [
+            51.0,
+            52.0,
+            42.0,
+            42.0,
+            45.0,
+            38.0,
+            39.0,
+            33.0,
+            33.0
+        ],
+        "score": 18.5
+    },
+    {
+        "name": "Curro Heuwelkruin: Grade8E1",
+        "rankings": [
+            42.0,
+            33.0,
+            35.0,
+            37.0,
+            37.0,
+            39.0,
+            32.0,
+            34.0,
+            34.0
+        ],
+        "score": 18.0
+    },
+    {
+        "name": "Curro Secunda: Maths Grade 8E1 ",
+        "rankings": [
+            31.0,
+            29.0,
+            31.0,
+            33.0,
+            32.0,
+            32.0,
+            33.0,
+            35.0,
+            35.0
+        ],
+        "score": 18.0
+    },
+    {
+        "name": "Curro Waterfall: Grade 8E2",
+        "rankings": [
+            28.0,
+            30.0,
+            34.0,
+            35.0,
+            36.0,
+            33.0,
+            34.0,
+            36.0,
+            36.0
+        ],
+        "score": 18.0
+    },
+    {
+        "name": "Curro Klerksdorp: Grade 8E1",
+        "rankings": [
+            37.0,
+            38.0,
+            37.0,
+            36.0,
+            35.0,
+            36.0,
+            37.0,
+            37.0,
+            37.0
+        ],
+        "score": 17.5
+    },
+    {
+        "name": "Curro Academy Pretoria: Grade 8E3 AZ",
+        "rankings": [
+            49.0,
+            49.0,
+            52.0,
+            48.0,
+            50.0,
+            49.0,
+            49.0,
+            41.0,
+            38.0
+        ],
+        "score": 17.0
+    },
+    {
+        "name": "Curro Century City: Maths Gr.8E 2",
+        "rankings": [
+            27.0,
+            28.0,
+            32.0,
+            34.0,
+            34.0,
+            35.0,
+            36.0,
+            38.0,
+            39.0
+        ],
+        "score": 17.0
+    },
+    {
+        "name": "Curro Krugersdorp: Grade 8E1",
+        "rankings": [
+            38.0,
+            41.0,
+            43.0,
+            44.0,
+            46.0,
+            37.0,
+            38.0,
+            39.0,
+            40.0
+        ],
+        "score": 17.0
+    },
+    {
+        "name": "Curro Krugersdorp: Grade 8E4",
+        "rankings": [
+            35.0,
+            37.0,
+            39.0,
+            39.0,
+            39.0,
+            41.0,
+            42.0,
+            40.0,
+            41.0
+        ],
+        "score": 16.5
+    },
+    {
+        "name": "Curro Heuwelkruin: Grade8E3",
+        "rankings": [
+            40.0,
+            36.0,
+            36.0,
+            38.0,
+            38.0,
+            40.0,
+            40.0,
+            42.0,
+            42.0
+        ],
+        "score": 16.0
+    },
+    {
+        "name": "Curro Roodeplaat: Gr 8E2 Maths LvN",
+        "rankings": [
+            39.0,
+            42.0,
+            44.0,
+            45.0,
+            47.0,
+            45.0,
+            41.0,
+            43.0,
+            43.0
+        ],
+        "score": 16.0
+    },
+    {
+        "name": "Curro Century City: Maths Gr.8E 4",
+        "rankings": [
+            59.0,
+            60.0,
+            41.0,
+            43.0,
+            40.0,
+            42.0,
+            43.0,
+            44.0,
+            44.0
+        ],
+        "score": 15.0
+    },
+    {
+        "name": "Curro Heritage House: Grade 8E2",
+        "rankings": [
+            50.0,
+            51.0,
+            46.0,
+            50.0,
+            41.0,
+            43.0,
+            44.0,
+            45.0,
+            45.0
+        ],
+        "score": 15.0
+    },
+    {
+        "name": "Curro Klerksdorp: Grade 8E2",
+        "rankings": [
+            43.0,
+            44.0,
+            47.0,
+            40.0,
+            42.0,
+            44.0,
+            45.0,
+            46.0,
+            46.0
+        ],
+        "score": 15.0
+    },
+    {
+        "name": "Curro The King's School Linbro: Gr8-E4 Maths MD",
+        "rankings": [
+            36.0,
+            39.0,
+            40.0,
+            41.0,
+            43.0,
+            46.0,
+            46.0,
+            47.0,
+            47.0
+        ],
+        "score": 15.0
+    },
+    {
+        "name": "Northern Academy Secondary School: Gr 8E2 Maths de Beer",
+        "rankings": [
+            56.0,
+            57.0,
+            55.0,
+            46.0,
+            44.0,
+            47.0,
+            47.0,
+            48.0,
+            48.0
+        ],
+        "score": 15.0
+    },
+    {
+        "name": "Curro Academy Parkdene: Grade 8E2 Maths GM",
+        "rankings": [
+            48.0,
+            48.0,
+            51.0,
+            54.0,
+            48.0,
+            48.0,
+            48.0,
+            49.0,
+            49.0
+        ],
+        "score": 14.0
+    },
+    {
+        "name": "Curro Mossel Bay: Maths Grade 8E2",
+        "rankings": [
+            44.0,
+            45.0,
+            48.0,
+            51.0,
+            53.0,
+            50.0,
+            50.0,
+            50.0,
+            50.0
+        ],
+        "score": 14.0
+    },
+    {
+        "name": "Curro Heritage House: Grade 8E1",
+        "rankings": [
+            54.0,
+            54.0,
+            57.0,
+            57.0,
+            58.0,
+            56.0,
+            51.0,
+            51.0,
+            51.0
+        ],
+        "score": 13.5
+    },
+    {
+        "name": "Northern Academy Secondary School: Gr 8E4 Maths Kanyamura",
+        "rankings": [
+            46.0,
+            46.0,
+            49.0,
+            52.0,
+            54.0,
+            51.0,
+            52.0,
+            52.0,
+            52.0
+        ],
+        "score": 13.5
+    },
+    {
+        "name": "Curro Academy Parkdene: Grade 8E4 Maths MM",
+        "rankings": [
+            41.0,
+            43.0,
+            45.0,
+            47.0,
+            49.0,
+            52.0,
+            53.0,
+            53.0,
+            53.0
+        ],
+        "score": 13.0
+    },
+    {
+        "name": "Curro Academy Pretoria: Grade 8E5 LC",
+        "rankings": [
+            52.0,
+            50.0,
+            53.0,
+            49.0,
+            51.0,
+            53.0,
+            54.0,
+            54.0,
+            54.0
+        ],
+        "score": 13.0
+    },
+    {
+        "name": "Curro Mossel Bay: Maths Grade 8E1",
+        "rankings": [
+            71.0,
+            71.0,
+            62.0,
+            63.0,
+            52.0,
+            54.0,
+            55.0,
+            55.0,
+            55.0
+        ],
+        "score": 13.0
+    },
+    {
+        "name": "Curro Roodeplaat: Gr 8E4 Maths SM",
+        "rankings": [
+            65.0,
+            65.0,
+            67.0,
+            59.0,
+            60.0,
+            60.0,
+            56.0,
+            56.0,
+            56.0
+        ],
+        "score": 13.0
+    },
+    {
+        "name": "Northern Academy Secondary School: Gr 8E1 Maths de Beer",
+        "rankings": [
+            61.0,
+            56.0,
+            54.0,
+            55.0,
+            56.0,
+            55.0,
+            57.0,
+            57.0,
+            57.0
+        ],
+        "score": 13.0
+    },
+    {
+        "name": "Curro St Dominics: Grade 8E2",
+        "rankings": [
+            47.0,
+            47.0,
+            50.0,
+            53.0,
+            55.0,
+            57.0,
+            58.0,
+            58.0,
+            58.0
+        ],
+        "score": 12.5
+    },
+    {
+        "name": "Curro Kathu: Maths Grade 8A1",
+        "rankings": [
+            57.0,
+            58.0,
+            59.0,
+            60.0,
+            61.0,
+            61.0,
+            59.0,
+            59.0,
+            59.0
+        ],
+        "score": 11.5
+    },
+    {
+        "name": "Northern Academy Secondary School: Gr 8E11 Maths Kolele",
+        "rankings": [
+            62.0,
+            63.0,
+            65.0,
+            67.0,
+            67.0,
+            63.0,
+            60.0,
+            60.0,
+            60.0
+        ],
+        "score": 11.5
+    },
+    {
+        "name": "Curro Bankenveld School: Grade 8E1",
+        "rankings": [
+            53.0,
+            53.0,
+            56.0,
+            56.0,
+            57.0,
+            58.0,
+            61.0,
+            61.0,
+            61.0
+        ],
+        "score": 11.0
+    },
+    {
+        "name": "Curro Edenvale: Grade 8E1",
+        "rankings": [
+            79.0,
+            79.0,
+            76.0,
+            77.0,
+            75.0,
+            76.0,
+            62.0,
+            62.0,
+            62.0
+        ],
+        "score": 11.0
+    },
+    {
+        "name": "Curro Krugersdorp: Grade 8E2",
+        "rankings": [
+            55.0,
+            55.0,
+            58.0,
+            58.0,
+            59.0,
+            59.0,
+            63.0,
+            63.0,
+            63.0
+        ],
+        "score": 11.0
+    },
+    {
+        "name": "Curro Rivonia: Grade 8E2",
+        "rankings": [
+            60.0,
+            62.0,
+            63.0,
+            64.0,
+            64.0,
+            66.0,
+            69.0,
+            64.0,
+            64.0
+        ],
+        "score": 11.0
+    },
+    {
+        "name": "Curro Roodeplaat: Gr 8E1 Maths SM",
+        "rankings": [
+            64.0,
+            64.0,
+            64.0,
+            65.0,
+            65.0,
+            67.0,
+            64.0,
+            65.0,
+            65.0
+        ],
+        "score": 11.0
+    },
+    {
+        "name": "Northern Academy Secondary School: Gr 8E10 Maths Kampffer",
+        "rankings": [
+            72.0,
+            72.0,
+            73.0,
+            66.0,
+            66.0,
+            62.0,
+            65.0,
+            66.0,
+            66.0
+        ],
+        "score": 11.0
+    },
+    {
+        "name": "Northern Academy Secondary School: Gr 8E3 Maths Kanyamura",
+        "rankings": [
+            67.0,
+            67.0,
+            68.0,
+            68.0,
+            68.0,
+            68.0,
+            70.0,
+            67.0,
+            67.0
+        ],
+        "score": 11.0
+    },
+    {
+        "name": "Curro Century City: Maths Gr.8E 3",
+        "rankings": [
+            58.0,
+            59.0,
+            60.0,
+            61.0,
+            62.0,
+            64.0,
+            66.0,
+            68.0,
+            68.0
+        ],
+        "score": 10.0
+    },
+    {
+        "name": "Curro Edenvale: Grade 8E2",
+        "rankings": [
+            85.0,
+            85.0,
+            81.0,
+            70.0,
+            70.0,
+            70.0,
+            67.0,
+            69.0,
+            69.0
+        ],
+        "score": 10.0
+    },
+    {
+        "name": "Curro Heuwelkruin: Grade8E2",
+        "rankings": [
+            63.0,
+            61.0,
+            61.0,
+            62.0,
+            63.0,
+            65.0,
+            68.0,
+            70.0,
+            70.0
+        ],
+        "score": 10.0
+    },
+    {
+        "name": "Northern Academy Secondary School: Gr 8E7 Maths Kampffer",
+        "rankings": [
+            73.0,
+            73.0,
+            74.0,
+            75.0,
+            76.0,
+            77.0,
+            72.0,
+            71.0,
+            71.0
+        ],
+        "score": 10.0
+    },
+    {
+        "name": "Curro Academy Mahikeng: Grade 8E5 Maths Mohadi",
+        "rankings": [
+            75.0,
+            75.0,
+            70.0,
+            71.0,
+            71.0,
+            71.0,
+            73.0,
+            72.0,
+            72.0
+        ],
+        "score": 9.0
+    },
+    {
+        "name": "Curro Bankenveld School: Grade 8",
+        "rankings": [
+            69.0,
+            69.0,
+            66.0,
+            69.0,
+            69.0,
+            69.0,
+            71.0,
+            73.0,
+            73.0
+        ],
+        "score": 9.0
+    },
+    {
+        "name": "Curro Bankenveld School: Grade 8E2",
+        "rankings": [
+            66.0,
+            66.0,
+            69.0,
+            72.0,
+            72.0,
+            72.0,
+            74.0,
+            74.0,
+            74.0
+        ],
+        "score": 8.5
+    },
+    {
+        "name": "Curro Academy Parkdene: Grade 8E1Maths GM",
+        "rankings": [
+            68.0,
+            68.0,
+            71.0,
+            73.0,
+            73.0,
+            73.0,
+            75.0,
+            75.0,
+            75.0
+        ],
+        "score": 8.0
+    },
+    {
+        "name": "Curro Academy Wilgeheuwel: Grade 8E5",
+        "rankings": [
+            84.0,
+            84.0,
+            79.0,
+            81.0,
+            82.0,
+            74.0,
+            76.0,
+            76.0,
+            76.0
+        ],
+        "score": 8.0
+    },
+    {
+        "name": "Curro Century City: Maths Gr.8E 1",
+        "rankings": [
+            70.0,
+            70.0,
+            72.0,
+            74.0,
+            74.0,
+            75.0,
+            77.0,
+            77.0,
+            77.0
+        ],
+        "score": 8.0
+    },
+    {
+        "name": "Curro Kathu: Maths Grade 8E2",
+        "rankings": [
+            74.0,
+            74.0,
+            77.0,
+            78.0,
+            78.0,
+            79.0,
+            79.0,
+            78.0,
+            78.0
+        ],
+        "score": 8.0
+    },
+    {
+        "name": "Northern Academy Secondary School: Gr 8E5 Maths Ramakgolo",
+        "rankings": [
+            104.0,
+            104.0,
+            100.0,
+            96.0,
+            96.0,
+            88.0,
+            92.0,
+            79.0,
+            79.0
+        ],
+        "score": 8.0
+    },
+    {
+        "name": "Northern Academy Secondary School: Gr 8E8 Maths Kampffer",
+        "rankings": [
+            77.0,
+            77.0,
+            82.0,
+            83.0,
+            84.0,
+            80.0,
+            80.0,
+            80.0,
+            80.0
+        ],
+        "score": 8.0
+    },
+    {
+        "name": "Curro Academy Clayville: Grade 8E3",
+        "rankings": [
+            78.0,
+            78.0,
+            75.0,
+            76.0,
+            77.0,
+            78.0,
+            78.0,
+            81.0,
+            81.0
+        ],
+        "score": 7.5
+    },
+    {
+        "name": "Curro Academy Parkdene: Grade 8E3 Maths GM",
+        "rankings": [
+            81.0,
+            81.0,
+            84.0,
+            84.0,
+            79.0,
+            81.0,
+            81.0,
+            82.0,
+            82.0
+        ],
+        "score": 7.0
+    },
+    {
+        "name": "Curro Academy Soshanguve: Grade 8 E1 Maths ST",
+        "rankings": [
+            82.0,
+            82.0,
+            78.0,
+            79.0,
+            80.0,
+            82.0,
+            82.0,
+            83.0,
+            83.0
+        ],
+        "score": 7.0
+    },
+    {
+        "name": "Curro Academy Soshanguve: Grade 8 E4 Maths ST",
+        "rankings": [
+            83.0,
+            83.0,
+            85.0,
+            80.0,
+            81.0,
+            83.0,
+            83.0,
+            84.0,
+            84.0
+        ],
+        "score": 7.0
+    },
+    {
+        "name": "Curro Bankenveld School: Grade 8E4",
+        "rankings": [
+            76.0,
+            76.0,
+            80.0,
+            82.0,
+            83.0,
+            84.0,
+            84.0,
+            85.0,
+            85.0
+        ],
+        "score": 7.0
+    },
+    {
+        "name": "Curro St Dominics: Grade 8E3",
+        "rankings": [
+            80.0,
+            80.0,
+            83.0,
+            85.0,
+            85.0,
+            85.0,
+            85.0,
+            86.0,
+            86.0
+        ],
+        "score": 6.5
+    },
+    {
+        "name": "Curro Academy Riverside: Grade 8E2 H",
+        "rankings": [
+            105.0,
+            105.0,
+            107.0,
+            108.0,
+            108.0,
+            89.0,
+            86.0,
+            87.0,
+            87.0
+        ],
+        "score": 6.0
+    },
+    {
+        "name": "Curro Edenvale: Grade 8E3",
+        "rankings": [
+            91.0,
+            92.0,
+            94.0,
+            91.0,
+            91.0,
+            94.0,
+            87.0,
+            88.0,
+            88.0
+        ],
+        "score": 6.0
+    },
+    {
+        "name": "Curro Klerksdorp: Grade 8E3",
+        "rankings": [
+            87.0,
+            88.0,
+            89.0,
+            93.0,
+            93.0,
+            96.0,
+            88.0,
+            89.0,
+            89.0
+        ],
+        "score": 6.0
+    },
+    {
+        "name": "Curro Klerksdorp: Grade 8E4",
+        "rankings": [
+            88.0,
+            89.0,
+            90.0,
+            86.0,
+            86.0,
+            86.0,
+            89.0,
+            90.0,
+            90.0
+        ],
+        "score": 6.0
+    },
+    {
+        "name": "Curro Waterstone College: Maths Grade 8E4",
+        "rankings": [
+            126.0,
+            126.0,
+            116.0,
+            101.0,
+            101.0,
+            103.0,
+            90.0,
+            91.0,
+            91.0
+        ],
+        "score": 6.0
+    },
+    {
+        "name": "Northern Academy Secondary School: Gr 8E13 Maths Kampffer",
+        "rankings": [
+            98.0,
+            98.0,
+            92.0,
+            88.0,
+            88.0,
+            87.0,
+            91.0,
+            92.0,
+            92.0
+        ],
+        "score": 6.0
+    },
+    {
+        "name": "Curro Heuwelkruin: Grade 8A1",
+        "rankings": [
+            107.0,
+            107.0,
+            86.0,
+            87.0,
+            87.0,
+            90.0,
+            93.0,
+            93.0,
+            93.0
+        ],
+        "score": 5.5
+    },
+    {
+        "name": "Curro Academy Soshanguve: Grade 8 E5 Maths ST",
+        "rankings": [
+            94.0,
+            95.0,
+            97.0,
+            89.0,
+            89.0,
+            91.0,
+            94.0,
+            94.0,
+            94.0
+        ],
+        "score": 5.0
+    },
+    {
+        "name": "Curro Academy Wilgeheuwel: Grade 8E3",
+        "rankings": [
+            95.0,
+            96.0,
+            98.0,
+            99.0,
+            99.0,
+            92.0,
+            95.0,
+            95.0,
+            95.0
+        ],
+        "score": 5.0
+    },
+    {
+        "name": "Curro Creston College: Grade 8E1 CM",
+        "rankings": [
+            86.0,
+            86.0,
+            87.0,
+            90.0,
+            90.0,
+            93.0,
+            96.0,
+            96.0,
+            96.0
+        ],
+        "score": 5.0
+    },
+    {
+        "name": "Curro Helderwyk: Maths 8.2",
+        "rankings": [
+            97.0,
+            87.0,
+            88.0,
+            92.0,
+            92.0,
+            95.0,
+            97.0,
+            97.0,
+            97.0
+        ],
+        "score": 5.0
+    },
+    {
+        "name": "Curro Krugersdorp: Grade 8E3",
+        "rankings": [
+            89.0,
+            90.0,
+            91.0,
+            94.0,
+            94.0,
+            97.0,
+            98.0,
+            98.0,
+            98.0
+        ],
+        "score": 5.0
+    },
+    {
+        "name": "Curro Rivonia: Grade 8E1",
+        "rankings": [
+            92.0,
+            93.0,
+            95.0,
+            95.0,
+            95.0,
+            98.0,
+            99.0,
+            99.0,
+            99.0
+        ],
+        "score": 5.0
+    },
+    {
+        "name": "Curro Academy Mahikeng: Grade 8E2 Maths Mohadi",
+        "rankings": [
+            90.0,
+            91.0,
+            93.0,
+            97.0,
+            97.0,
+            99.0,
+            100.0,
+            100.0,
+            100.0
+        ],
+        "score": 4.5
+    },
+    {
+        "name": "Curro Academy Riverside: Grade 8E1 H",
+        "rankings": [
+            100.0,
+            100.0,
+            101.0,
+            102.0,
+            102.0,
+            101.0,
+            102.0,
+            101.0,
+            101.0
+        ],
+        "score": 4.5
+    },
+    {
+        "name": "Curro Academy Clayville: Grade 8E2",
+        "rankings": [
+            93.0,
+            94.0,
+            96.0,
+            98.0,
+            98.0,
+            100.0,
+            101.0,
+            102.0,
+            102.0
+        ],
+        "score": 4.0
+    },
+    {
+        "name": "Curro Academy Wilgeheuwel: Grade 8E4",
+        "rankings": [
+            101.0,
+            101.0,
+            104.0,
+            106.0,
+            106.0,
+            107.0,
+            108.0,
+            103.0,
+            103.0
+        ],
+        "score": 4.0
+    },
+    {
+        "name": "Curro Creston College: Grade 8E2 JL",
+        "rankings": [
+            96.0,
+            97.0,
+            99.0,
+            100.0,
+            100.0,
+            102.0,
+            103.0,
+            104.0,
+            104.0
+        ],
+        "score": 4.0
+    },
+    {
+        "name": "Curro Edenvale: Grade 8E4",
+        "rankings": [
+            102.0,
+            102.0,
+            105.0,
+            103.0,
+            103.0,
+            104.0,
+            104.0,
+            105.0,
+            105.0
+        ],
+        "score": 4.0
+    },
+    {
+        "name": "Curro Waterstone College: Maths Grade 8E2",
+        "rankings": [
+            99.0,
+            99.0,
+            102.0,
+            104.0,
+            104.0,
+            105.0,
+            105.0,
+            106.0,
+            106.0
+        ],
+        "score": 3.5
+    },
+    {
+        "name": "Curro Academy Soshanguve: Grade 8 E2 Maths MM",
+        "rankings": [
+            106.0,
+            106.0,
+            108.0,
+            109.0,
+            109.0,
+            109.0,
+            106.0,
+            107.0,
+            107.0
+        ],
+        "score": 3.0
+    },
+    {
+        "name": "Curro Academy Soshanguve: Grade 8 E3 Maths ST",
+        "rankings": [
+            111.0,
+            111.0,
+            103.0,
+            105.0,
+            105.0,
+            106.0,
+            107.0,
+            108.0,
+            108.0
+        ],
+        "score": 3.0
+    },
+    {
+        "name": "Curro Kathu: Maths Grade 8E1",
+        "rankings": [
+            103.0,
+            103.0,
+            106.0,
+            107.0,
+            107.0,
+            108.0,
+            109.0,
+            109.0,
+            109.0
+        ],
+        "score": 3.0
+    },
+    {
+        "name": "Curro Waterstone College: Maths Grade 8E1",
+        "rankings": [
+            108.0,
+            108.0,
+            109.0,
+            110.0,
+            110.0,
+            110.0,
+            110.0,
+            110.0,
+            110.0
+        ],
+        "score": 2.5
+    },
+    {
+        "name": "Curro Academy Mahikeng: Grade 8E1 Maths Mohadi",
+        "rankings": [
+            109.0,
+            109.0,
+            110.0,
+            111.0,
+            111.0,
+            111.0,
+            111.0,
+            111.0,
+            111.0
+        ],
+        "score": 2.0
+    },
+    {
+        "name": "Curro Academy Mahikeng: Grade 8E3 Maths Mohadi",
+        "rankings": [
+            117.0,
+            117.0,
+            120.0,
+            120.0,
+            121.0,
+            112.0,
+            112.0,
+            112.0,
+            112.0
+        ],
+        "score": 2.0
+    },
+    {
+        "name": "Curro Academy Mahikeng: Grade 8E4 Maths Mohadi",
+        "rankings": [
+            110.0,
+            110.0,
+            111.0,
+            112.0,
+            112.0,
+            113.0,
+            113.0,
+            113.0,
+            113.0
+        ],
+        "score": 2.0
+    },
+    {
+        "name": "Curro Academy Wilgeheuwel: Grade 8E2",
+        "rankings": [
+            112.0,
+            112.0,
+            112.0,
+            113.0,
+            113.0,
+            114.0,
+            114.0,
+            114.0,
+            114.0
+        ],
+        "score": 2.0
+    },
+    {
+        "name": "Curro Bloemfontein School: Grade 8E2",
+        "rankings": [
+            137.0,
+            137.0,
+            137.0,
+            122.0,
+            123.0,
+            123.0,
+            115.0,
+            115.0,
+            115.0
+        ],
+        "score": 2.0
+    },
+    {
+        "name": "Curro Bloemfontein School: Grade 8E3",
+        "rankings": [
+            119.0,
+            119.0,
+            113.0,
+            114.0,
+            114.0,
+            115.0,
+            116.0,
+            116.0,
+            116.0
+        ],
+        "score": 2.0
+    },
+    {
+        "name": "Curro St Dominics: Grade 8E1",
+        "rankings": [
+            113.0,
+            113.0,
+            114.0,
+            115.0,
+            115.0,
+            116.0,
+            117.0,
+            117.0,
+            117.0
+        ],
+        "score": 2.0
+    },
+    {
+        "name": "Curro Waterstone College: Maths Grade 8E3",
+        "rankings": [
+            114.0,
+            114.0,
+            115.0,
+            116.0,
+            116.0,
+            117.0,
+            118.0,
+            118.0,
+            118.0
+        ],
+        "score": 2.0
+    },
+    {
+        "name": "Curro Waterstone College: Maths Grade 8E5",
+        "rankings": [
+            115.0,
+            115.0,
+            117.0,
+            117.0,
+            117.0,
+            118.0,
+            119.0,
+            119.0,
+            119.0
+        ],
+        "score": 2.0
+    },
+    {
+        "name": "Meridian Cosmo City: Grade 8E3",
+        "rankings": [
+            148.0,
+            148.0,
+            148.0,
+            148.0,
+            148.0,
+            130.0,
+            131.0,
+            120.0,
+            120.0
+        ],
+        "score": 2.0
+    },
+    {
+        "name": "Meridian Cosmo City: Grade 8E4",
+        "rankings": [
+            149.0,
+            149.0,
+            149.0,
+            149.0,
+            149.0,
+            131.0,
+            120.0,
+            121.0,
+            121.0
+        ],
+        "score": 2.0
+    },
+    {
+        "name": "Meridian Pinehurst Private School: Grade 8E4 (MS)",
+        "rankings": [
+            116.0,
+            116.0,
+            118.0,
+            118.0,
+            118.0,
+            119.0,
+            121.0,
+            122.0,
+            122.0
+        ],
+        "score": 2.0
+    },
+    {
+        "name": "Curro Academy Clayville: Grade 8E1",
+        "rankings": [
+            131.0,
+            131.0,
+            119.0,
+            119.0,
+            120.0,
+            121.0,
+            122.0,
+            123.0,
+            123.0
+        ],
+        "score": 1.5
+    },
+    {
+        "name": "Curro Waterstone College: Maths Grade 8E6",
+        "rankings": [
+            127.0,
+            127.0,
+            128.0,
+            129.0,
+            119.0,
+            120.0,
+            123.0,
+            124.0,
+            124.0
+        ],
+        "score": 1.5
+    },
+    {
+        "name": "Curro Academy Wilgeheuwel: Grade 8E1",
+        "rankings": [
+            118.0,
+            118.0,
+            121.0,
+            121.0,
+            122.0,
+            122.0,
+            124.0,
+            125.0,
+            125.0
+        ],
+        "score": 1.0
+    },
+    {
+        "name": "Curro Helderwyk: Maths 8.1",
+        "rankings": [
+            120.0,
+            120.0,
+            122.0,
+            123.0,
+            124.0,
+            124.0,
+            125.0,
+            126.0,
+            126.0
+        ],
+        "score": 1.0
+    },
+    {
+        "name": "Curro Helderwyk: Maths 8.4",
+        "rankings": [
+            121.0,
+            121.0,
+            123.0,
+            124.0,
+            125.0,
+            125.0,
+            126.0,
+            127.0,
+            127.0
+        ],
+        "score": 1.0
+    },
+    {
+        "name": "Curro Thatchfield: Maths Grade 8 E1",
+        "rankings": [
+            122.0,
+            122.0,
+            124.0,
+            125.0,
+            126.0,
+            126.0,
+            127.0,
+            128.0,
+            128.0
+        ],
+        "score": 1.0
+    },
+    {
+        "name": "Curro Thatchfield: Maths Grade 8 E2",
+        "rankings": [
+            123.0,
+            123.0,
+            125.0,
+            126.0,
+            127.0,
+            127.0,
+            128.0,
+            129.0,
+            129.0
+        ],
+        "score": 1.0
+    },
+    {
+        "name": "Curro Thatchfield: Maths Grade 8 E4",
+        "rankings": [
+            124.0,
+            124.0,
+            126.0,
+            127.0,
+            128.0,
+            128.0,
+            129.0,
+            130.0,
+            130.0
+        ],
+        "score": 1.0
+    },
+    {
+        "name": "Curro Thatchfield: Maths Grade 8 E6",
+        "rankings": [
+            125.0,
+            125.0,
+            127.0,
+            128.0,
+            129.0,
+            129.0,
+            130.0,
+            131.0,
+            131.0
+        ],
+        "score": 1.0
+    },
+    {
+        "name": "Meridian Cosmo City: Grade 8E5",
+        "rankings": [
+            150.0,
+            150.0,
+            150.0,
+            150.0,
+            150.0,
+            150.0,
+            150.0,
+            132.0,
+            132.0
+        ],
+        "score": 1.0
+    },
+    {
+        "name": "Meridian Pinehurst Private School: Grade 8E1(ZP)",
+        "rankings": [
+            128.0,
+            128.0,
+            129.0,
+            130.0,
+            130.0,
+            132.0,
+            132.0,
+            133.0,
+            133.0
+        ],
+        "score": 1.0
+    },
+    {
+        "name": "Meridian Pinehurst Private School: Grade 8E2 (ZP)",
+        "rankings": [
+            129.0,
+            129.0,
+            130.0,
+            131.0,
+            131.0,
+            133.0,
+            133.0,
+            134.0,
+            134.0
+        ],
+        "score": 1.0
+    },
+    {
+        "name": "Meridian Pinehurst Private School: Grade 8E5 (MT)",
+        "rankings": [
+            130.0,
+            130.0,
+            131.0,
+            132.0,
+            132.0,
+            134.0,
+            134.0,
+            135.0,
+            135.0
+        ],
+        "score": 1.0
+    },
+    {
+        "name": "Curro Helderwyk: Maths 8.3",
+        "rankings": [
+            132.0,
+            132.0,
+            132.0,
+            133.0,
+            133.0,
+            135.0,
+            135.0,
+            136.0,
+            136.0
+        ],
+        "score": 0.5
+    },
+    {
+        "name": "Curro Academy Savanna City: Grade 8 E1",
+        "rankings": [
+            133.0,
+            133.0,
+            133.0,
+            134.0,
+            134.0,
+            136.0,
+            136.0,
+            137.0,
+            137.0
+        ],
+        "score": 0.0
+    },
+    {
+        "name": "Curro Academy Savanna City: Grade 8 E2",
+        "rankings": [
+            134.0,
+            134.0,
+            134.0,
+            135.0,
+            135.0,
+            137.0,
+            137.0,
+            138.0,
+            138.0
+        ],
+        "score": 0.0
+    },
+    {
+        "name": "Curro Academy Savanna City: Grade 8 E3",
+        "rankings": [
+            135.0,
+            135.0,
+            135.0,
+            136.0,
+            136.0,
+            138.0,
+            138.0,
+            139.0,
+            139.0
+        ],
+        "score": 0.0
+    },
+    {
+        "name": "Curro Academy Wilgeheuwel: Grade 8E6",
+        "rankings": [
+            136.0,
+            136.0,
+            136.0,
+            137.0,
+            137.0,
+            139.0,
+            139.0,
+            140.0,
+            140.0
+        ],
+        "score": 0.0
+    },
+    {
+        "name": "Curro Helderwyk: Maths 8.5",
+        "rankings": [
+            138.0,
+            138.0,
+            138.0,
+            138.0,
+            138.0,
+            140.0,
+            140.0,
+            141.0,
+            141.0
+        ],
+        "score": 0.0
+    },
+    {
+        "name": "Curro Secunda: Maths Grade 8E3",
+        "rankings": [
+            139.0,
+            139.0,
+            139.0,
+            139.0,
+            139.0,
+            141.0,
+            141.0,
+            142.0,
+            142.0
+        ],
+        "score": 0.0
+    },
+    {
+        "name": "Curro Thatchfield: Maths Grade 8 E3",
+        "rankings": [
+            140.0,
+            140.0,
+            140.0,
+            140.0,
+            140.0,
+            142.0,
+            142.0,
+            143.0,
+            143.0
+        ],
+        "score": 0.0
+    },
+    {
+        "name": "Curro Thatchfield: Maths Grade 8 E5",
+        "rankings": [
+            141.0,
+            141.0,
+            141.0,
+            141.0,
+            141.0,
+            143.0,
+            143.0,
+            144.0,
+            144.0
+        ],
+        "score": 0.0
+    },
+    {
+        "name": "Curro Thatchfield: Maths Grade 8 E7",
+        "rankings": [
+            142.0,
+            142.0,
+            142.0,
+            142.0,
+            142.0,
+            144.0,
+            144.0,
+            145.0,
+            145.0
+        ],
+        "score": 0.0
+    },
+    {
+        "name": "Curro Thatchfield: Maths Grade 8 E8",
+        "rankings": [
+            143.0,
+            143.0,
+            143.0,
+            143.0,
+            143.0,
+            145.0,
+            145.0,
+            146.0,
+            146.0
+        ],
+        "score": 0.0
+    },
+    {
+        "name": "Curro Vanderbijlpark: Grade 8E3",
+        "rankings": [
+            144.0,
+            144.0,
+            144.0,
+            144.0,
+            144.0,
+            146.0,
+            146.0,
+            147.0,
+            147.0
+        ],
+        "score": 0.0
+    },
+    {
+        "name": "Curro Vanderbijlpark: Grade 8E4",
+        "rankings": [
+            145.0,
+            145.0,
+            145.0,
+            145.0,
+            145.0,
+            147.0,
+            147.0,
+            148.0,
+            148.0
+        ],
+        "score": 0.0
+    },
+    {
+        "name": "Meridian Cosmo City: Grade 8E1",
+        "rankings": [
+            146.0,
+            146.0,
+            146.0,
+            146.0,
+            146.0,
+            148.0,
+            148.0,
+            149.0,
+            149.0
+        ],
+        "score": 0.0
+    },
+    {
+        "name": "Meridian Cosmo City: Grade 8E2",
+        "rankings": [
+            147.0,
+            147.0,
+            147.0,
+            147.0,
+            147.0,
+            149.0,
+            149.0,
+            150.0,
+            150.0
+        ],
+        "score": 0.0
+    },
+    {
+        "name": "Meridian Cosmo City: Grade 8E6",
+        "rankings": [
+            151.0,
+            151.0,
+            151.0,
+            151.0,
+            151.0,
+            151.0,
+            151.0,
+            151.0,
+            151.0
+        ],
+        "score": 0.0
+    },
+    {
+        "name": "Meridian Karino Independent School: Grade 8E1",
+        "rankings": [
+            152.0,
+            152.0,
+            152.0,
+            152.0,
+            152.0,
+            152.0,
+            152.0,
+            152.0,
+            152.0
+        ],
+        "score": 0.0
+    },
+    {
+        "name": "Meridian Karino Independent School: Grade 8E2",
+        "rankings": [
+            153.0,
+            153.0,
+            153.0,
+            153.0,
+            153.0,
+            153.0,
+            153.0,
+            153.0,
+            153.0
+        ],
+        "score": 0.0
+    },
+    {
+        "name": "Meridian Karino Independent School: Grade 8E3",
+        "rankings": [
+            154.0,
+            154.0,
+            154.0,
+            154.0,
+            154.0,
+            154.0,
+            154.0,
+            154.0,
+            154.0
+        ],
+        "score": 0.0
+    },
+    {
+        "name": "Meridian Pinehurst Private School: Grade 8E3 (ZP)",
+        "rankings": [
+            155.0,
+            155.0,
+            155.0,
+            155.0,
+            155.0,
+            155.0,
+            155.0,
+            155.0,
+            155.0
+        ],
+        "score": 0.0
+    }
+];
+
+/*
+[
+    {
+        "name": "Curro The King's School Linbro Gr8-E1 Maths LD",
+        "rankings": [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ],
+        "score": 37.0
+    },
+    {
+        "name": "Curro The King's School Linbro Gr8-E3 Maths MD",
+        "rankings": [
+            2.0,
+            2.0,
+            2.0,
+            2.0,
+            2.0,
+            2.0,
+            2.0
+        ],
+        "score": 34.0
+    },
+    {
+        "name": "Curro The King's School Linbro Gr8-E2 Maths MD",
+        "rankings": [
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0
+        ],
+        "score": 24.0
+    },
+    {
+        "name": "Curro The King's School Linbro Gr8-E4 Maths MD",
+        "rankings": [
+            4.0,
+            4.0,
+            4.0,
+            4.0,
+            4.0,
+            4.0,
+            4.0
+        ],
+        "score": 15.0
+    }
+];
+*/
+
+var blue_to_brown = d3.scaleLinear()
+  .domain([1, dataset.length])
+  //.range(["steelblue", "brown"])
+  .range(["#0088b4", "#ef6a2c"])
+  .interpolate(d3.interpolateLab);
+
+
+/*
+var dataset = [
+
+];
+
+
+for (var k=0; k<weekcount; k++)
+{
+    var rankings = d3.shuffle(d3.range(1, schoolcount+1,1));
+    //var rankings = d3.range(1, schoolcount+1,1);
+    for (var j=0; j<schoolcount; j++)
+    {
+        if (k==0) {dataset.push(
+            {   
+            name : "Class " + j ,
+            rankings : [],
+            score: 0
+            }
+        );}
+        if (k==weekcount -1) 
+            {
+                dataset[j].rankings.push(dataset[j].rankings[k-1]);
+                dataset[j].score = 100 - dataset[j].rankings[k-1]*4; 
+            }
+        else{dataset[j].rankings.push(rankings[j]);}
+    }
+}
+
+dataset.sort(function(a, b) {
+                 return d3.ascending(a.rankings[a.rankings.length-1], b.rankings[b.rankings.length-1]);
+                            });
+*/
+
+var widths = (w)/(dataset.length);
+
+var xScale = d3.scaleBand()
+        .domain(d3.range(weekcount))
+        .rangeRound([padding, w-2*padding]);
+
+var yScale = d3.scaleBand()
+        .domain(d3.range(dataset.length))
+        .rangeRound([padding/4, max-2*padding]);
+
+var scoreScale = d3.scaleLinear()
+        .domain([0,dataset[0].score])
+        .range([0, 100]);
+
+var parallels = svg.selectAll("parallels")
+        .data(dataset[0].rankings)
+        .enter()
+        .append("line")
+        .attr("x1", function(d,i) {return xScale(i); })
+        .attr("x2", function(d,i) {return xScale(i);})
+        .attr("y1", function(d,i) {return yScale(dataset.length-1);})
+        .attr("y2", function(d,i) {return yScale(0);})
+        .attr("stroke-width",1)
+        .attr("stroke","#111");
+
+var weeklabels = svg.selectAll("weeklabels")
+    .data(dataset[0].rankings)
+    .enter()
+    .append("text")
+    .attr("x", function (d,i) {return xScale(i);} )
+    .attr("y", function(d,i) { return yScale(0)- 20 ;} )
+    .attr("font-size", 10)
+    .attr("text-anchor", "middle")
+    .text(function(d,i){ if (i <dataset[0].rankings.length-1) 
+                            {return "Week "+ (28+i+1);}
+                        else
+                            {return "Current";}
+                        });
+
+
+var paths = svg.selectAll("paths")
+        .data(dataset)
+        .enter()
+        .append("path")
+        .attr("d", function(d,i) 
+            {   
+                var x = xScale(0);
+                var y = yScale(d.rankings[0]-1);
+                var result = "M "+ x + " "+ y +" L ";
+                for (var j = 0; j < d.rankings.length ; j++)
+                {
+                    x = xScale(j);
+                    y = yScale(d.rankings[j]-1);
+                    result = result + x + " " + y  +",";
+                }
+                return result;
+            })
+        .attr("class",function(d,i){ return "SchoolClass" +i; })
+        .attr("id",function(d,i){ return "pathSchoolClass" +i; })
+        .attr("fill","none")
+        .attr("stroke-width",1)
+        .attr("stroke",function(d,i){ return blue_to_brown(d.rankings[d.rankings.length-1]);});
+        
+var labels = svg.selectAll("schools")
+    .data(dataset)
+    .enter()
+    .append("text")
+    .attr("x", function(d,i) { return xScale(d.rankings.length-1) + 15;} )
+    .attr("y", function(d)   { return yScale(d.rankings[d.rankings.length-1]-1)+5;} )
+//    .attr("text-anchor", "left")
+    .attr("font-size", 14)
+    .attr("class",function(d,i){ return "SchoolClass" +i; })
+    .classed("SchoolClass",true)
+    .attr("id",function(d,i){ return "SchoolClass" +i; })
+    //.attr("stroke",function(d,i){ return blue_to_brown(d[d.length-1]);})
+    .text(function(d,i){ return d.name;});
+   
+
+var scorebars = svg.selectAll("schools-scores")
+    .data(dataset)
+    .enter()
+    .append("rect")
+    .attr("x", function(d,i) { return xScale(dataset[0].rankings.length-1) + 400;} )
+    .attr("y", function(d,i) { return yScale(i)-5;} )
+    .attr("height", function(d,i) { return 10;} )
+    .attr("width", function(d,i) { return  scoreScale(d.score);} )
+    .attr("fill",function(d,i){ return blue_to_brown(i);})
+    .attr("class",function(d,i){ return "SchoolClass" +i; })
+    .attr("id",function(d,i){ return "barSchoolClass" +i; })
+    .attr("stroke-width", 1)
+    .attr("stroke",function(d,i){ return "gray";});
+   
+
+
+ 
+var positions = svg.selectAll("positions")
+    .data(dataset)
+    .enter()
+    .append("text")
+    .attr("x", xScale(0) - 20 )
+    .attr("y", function(d,i) { return yScale(i) +7 ;} )
+    .attr("font-size", 14)
+    .attr("text-anchor", "end")
+    .text(function(d,i){ if (i ==0 ) { return "Position: "+ (i+1); } else { return i+1;}});
+
+var xAxis = d3.axisBottom()
+                  .scale(scoreScale)
+                  .ticks(5);  //Set rough # of ticks
+
+
+
+d3.selectAll(".SchoolClass")
+   .on("mouseover", function() {
+   var id = d3.select(this).attr("id");
+   svg.selectAll("path").attr("opacity",.4);
+   
+   d3.select(this)
+            .attr("font-weight", "bold");
+   
+   d3.selectAll("#path"+id)
+            .attr("stroke",function(d,i){ return blue_to_brown(d.rankings[d.rankings.length-1]);})
+            .attr("stroke-width", 5)
+            .attr("opacity",1);
+
+   d3.selectAll("#bar"+id)
+            .attr("stroke",function(d,i){ return "black";});
+
+   })
+   .on("mouseout", function() {
+        var id = d3.select(this).attr("id");
+        svg.selectAll("path").attr("stroke",function(d,i){ return blue_to_brown(d.rankings[d.rankings.length-1]);})
+        .attr("opacity",1);
+   
+        d3.selectAll("."+id)
+            .attr("font-weight", "normal");
+        d3.selectAll("#path"+id)
+            .attr("stroke-width", 1);
+        d3.selectAll("#bar"+id)
+            .attr("stroke",function(d,i){ return "gray";});
+    }) ;
+
+
+/*
+svg.append("g")
+    .attr("class", "axis")
+    .attr("transform", "translate(" + ((xScale(5) + 135)) + ","+( yScale(schoolcount-1)+7)+")")
+    .call(xAxis);
+*/
+/*
+
+var lines = svg.selectAll("lines")
+        .data(dataset)
+        .enter()
+        .append("line")
+        .attr("x1", function(d,i) {return 50+0*50;})
+        .attr("y1", function(d,i) {return 50+(d[0]-1)*50;})
+        .attr("x2", function(d,i) {return 50+1*50;})
+        .attr("y2", function(d,i) {return 50+(d[1]-1)*50;})
+        .attr("x3", function(d,i) {return 50+2*50;})
+        .attr("y3", function(d,i) {return 50+(d[2]-1)*50;})
+        .attr("x4", function(d,i) {return 50+3*50;})
+        .attr("y4", function(d,i) {return 50+(d[3]-1)*50;})
+        .attr("x5", function(d,i) {return 50+4*50;})
+        .attr("y5", function(d,i) {return 50+(d[4]-1)*50;})
+        .attr("x6", function(d,i) {return 50+5*50;})
+        .attr("y6", function(d,i) {return 50+(d[5]-1)*50;})
+        .attr("x7", function(d,i) {return 50+6*50;})
+        .attr("y7", function(d,i) {return 50+(d[6]-1)*50;})
+        .attr("stroke-width",2)
+        .attr("stroke",function(d,i){ if (i == 0) {return "black";}else{return "red";}});
+ */
+
+
+        </script>
+    </body>
+</html> 
