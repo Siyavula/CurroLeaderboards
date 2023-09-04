@@ -69,7 +69,7 @@ div.bar {
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 
 
-var weekcount = 9; /* add a fake last week */
+var weekcount = 10; /* add a fake last week */
 var schoolcount = 20;
 
 var w = 700;
@@ -92,8 +92,10 @@ var svg = d3.select("#rankings");
 var dataset = 
 [
     {
-        "name": "Curro Academy Protea Glen",
+        "name": "Curro Academy Sandown",
         "rankings": [
+            1.0,
+            1.0,
             1.0,
             1.0,
             1.0,
@@ -103,11 +105,13 @@ var dataset =
             1.0,
             1.0
         ],
-        "score": 57.0
+        "score": 75.0
     },
     {
-        "name": "Curro Academy Sandown",
+        "name": "Curro Academy Protea Glen",
         "rankings": [
+            2.0,
+            2.0,
             2.0,
             2.0,
             2.0,
@@ -117,293 +121,335 @@ var dataset =
             2.0,
             2.0
         ],
-        "score": 37.0
+        "score": 55.0
     },
     {
-        "name": "Curro Somerset West",
+        "name": "Curro Vanderbijlpark",
         "rankings": [
-            4.0,
-            4.0,
-            4.0,
-            4.0,
-            4.0,
-            4.0,
-            5.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0,
+            3.0,
             3.0
         ],
-        "score": 24.0
-    },
-    {
-        "name": "Meridian Rustenburg",
-        "rankings": [
-            3.0,
-            3.0,
-            3.0,
-            3.0,
-            3.0,
-            3.0,
-            3.0,
-            4.0
-        ],
-        "score": 24.0
+        "score": 41.0
     },
     {
         "name": "Curro The King's School Linbro",
         "rankings": [
-            5.0,
-            5.0,
-            5.0,
-            5.0,
-            5.0,
-            5.0,
             4.0,
-            5.0
+            4.0,
+            4.0,
+            4.0,
+            4.0,
+            4.0,
+            4.0,
+            4.0,
+            4.0,
+            4.0
         ],
-        "score": 23.5
+        "score": 31.0
     },
     {
-        "name": "Curro Waterfall",
+        "name": "Curro Roodeplaat",
         "rankings": [
-            6.0,
-            6.0,
-            6.0,
-            6.0,
+            5.0,
+            5.0,
+            5.0,
+            5.0,
+            5.0,
+            5.0,
+            5.0,
+            5.0,
+            5.0,
+            5.0
+        ],
+        "score": 28.0
+    },
+    {
+        "name": "Curro Heuwelkruin",
+        "rankings": [
+            8.0,
+            8.0,
+            7.0,
+            7.0,
+            7.0,
+            7.0,
             6.0,
             6.0,
             6.0,
             6.0
         ],
-        "score": 21.0
+        "score": 16.0
+    },
+    {
+        "name": "Meridian Rustenburg",
+        "rankings": [
+            6.0,
+            6.0,
+            6.0,
+            6.0,
+            6.0,
+            6.0,
+            7.0,
+            7.0,
+            7.0,
+            7.0
+        ],
+        "score": 15.5
     },
     {
         "name": "Curro Academy Pretoria",
         "rankings": [
             7.0,
             7.0,
-            7.0,
-            7.0,
-            7.0,
-            7.0,
-            7.0,
-            7.0
-        ],
-        "score": 20.0
-    },
-    {
-        "name": "Curro Mossel Bay",
-        "rankings": [
             8.0,
-            10.0,
-            11.0,
-            9.0,
-            10.0,
+            8.0,
+            8.0,
+            8.0,
+            8.0,
             8.0,
             8.0,
             8.0
         ],
-        "score": 16.5
+        "score": 14.5
     },
     {
-        "name": "Curro Secunda",
+        "name": "Curro Somerset West",
         "rankings": [
-            13.0,
-            13.0,
+            10.0,
+            10.0,
             9.0,
-            8.0,
-            8.0,
+            9.0,
+            9.0,
+            9.0,
+            9.0,
             9.0,
             9.0,
             9.0
         ],
-        "score": 15.5
-    },
-    {
-        "name": "Curro Heritage House",
-        "rankings": [
-            12.0,
-            11.0,
-            13.0,
-            10.0,
-            9.0,
-            10.0,
-            10.0,
-            10.0
-        ],
-        "score": 15.0
-    },
-    {
-        "name": "Curro Roodeplaat",
-        "rankings": [
-            9.0,
-            12.0,
-            14.0,
-            14.0,
-            11.0,
-            11.0,
-            11.0,
-            11.0
-        ],
-        "score": 15.0
-    },
-    {
-        "name": "Curro Vanderbijlpark",
-        "rankings": [
-            14.0,
-            9.0,
-            10.0,
-            12.0,
-            13.0,
-            13.0,
-            12.0,
-            12.0
-        ],
-        "score": 15.0
-    },
-    {
-        "name": "Curro Heuwelkruin",
-        "rankings": [
-            10.0,
-            8.0,
-            8.0,
-            11.0,
-            12.0,
-            12.0,
-            13.0,
-            13.0
-        ],
-        "score": 14.0
-    },
-    {
-        "name": "Curro Academy Parkdene",
-        "rankings": [
-            11.0,
-            14.0,
-            12.0,
-            13.0,
-            14.0,
-            14.0,
-            14.0,
-            14.0
-        ],
-        "score": 13.0
+        "score": 12.5
     },
     {
         "name": "Curro Krugersdorp",
         "rankings": [
-            15.0,
-            16.0,
-            16.0,
-            16.0,
-            17.0,
-            17.0,
-            15.0,
-            15.0
+            9.0,
+            9.0,
+            10.0,
+            10.0,
+            10.0,
+            10.0,
+            10.0,
+            10.0,
+            10.0,
+            10.0
         ],
         "score": 12.0
+    },
+    {
+        "name": "Curro Academy Riverside",
+        "rankings": [
+            12.0,
+            12.0,
+            12.0,
+            12.0,
+            11.0,
+            11.0,
+            11.0,
+            12.0,
+            12.0,
+            11.0
+        ],
+        "score": 10.0
     },
     {
         "name": "Northern Academy Secondary School",
         "rankings": [
-            17.0,
-            17.0,
-            17.0,
-            17.0,
-            15.0,
-            15.0,
-            16.0,
-            16.0
-        ],
-        "score": 12.0
-    },
-    {
-        "name": "Curro Century City",
-        "rankings": [
-            16.0,
             15.0,
             15.0,
             15.0,
-            16.0,
-            16.0,
-            17.0,
-            17.0
-        ],
-        "score": 11.5
-    },
-    {
-        "name": "Curro Klerksdorp",
-        "rankings": [
-            19.0,
-            20.0,
-            20.0,
-            19.0,
-            19.0,
-            20.0,
-            18.0,
-            18.0
+            14.0,
+            14.0,
+            14.0,
+            14.0,
+            11.0,
+            11.0,
+            12.0
         ],
         "score": 10.0
     },
     {
-        "name": "Curro Rivonia",
+        "name": "Curro Waterfall",
         "rankings": [
-            20.0,
-            19.0,
-            19.0,
-            20.0,
-            20.0,
-            18.0,
-            19.0,
-            19.0
-        ],
-        "score": 10.0
-    },
-    {
-        "name": "Curro Bankenveld School",
-        "rankings": [
-            18.0,
-            18.0,
-            18.0,
-            18.0,
-            18.0,
-            19.0,
-            20.0,
-            20.0
+            11.0,
+            11.0,
+            11.0,
+            11.0,
+            12.0,
+            12.0,
+            12.0,
+            13.0,
+            13.0,
+            13.0
         ],
         "score": 9.0
     },
     {
-        "name": "Curro Bloemfontein School",
+        "name": "Meridian Pinehurst Private School",
         "rankings": [
-            29.0,
-            25.0,
-            22.0,
-            22.0,
-            21.0,
-            21.0,
-            21.0,
-            21.0
+            13.0,
+            13.0,
+            13.0,
+            13.0,
+            13.0,
+            13.0,
+            13.0,
+            14.0,
+            14.0,
+            14.0
         ],
-        "score": 8.0
+        "score": 9.0
     },
     {
-        "name": "Curro Edenvale",
+        "name": "Curro Century City",
+        "rankings": [
+            14.0,
+            14.0,
+            14.0,
+            15.0,
+            15.0,
+            15.0,
+            15.0,
+            15.0,
+            15.0,
+            15.0
+        ],
+        "score": 6.0
+    },
+    {
+        "name": "Curro Klerksdorp",
+        "rankings": [
+            16.0,
+            16.0,
+            16.0,
+            16.0,
+            16.0,
+            16.0,
+            16.0,
+            16.0,
+            16.0,
+            16.0
+        ],
+        "score": 6.0
+    },
+    {
+        "name": "Curro Mossel Bay",
         "rankings": [
             21.0,
             21.0,
-            21.0,
-            21.0,
             22.0,
-            22.0,
-            22.0,
-            22.0
+            19.0,
+            19.0,
+            19.0,
+            17.0,
+            17.0,
+            17.0,
+            17.0
         ],
-        "score": 7.5
+        "score": 5.0
+    },
+    {
+        "name": "Curro Academy Soshanguve",
+        "rankings": [
+            17.0,
+            17.0,
+            17.0,
+            17.0,
+            17.0,
+            17.0,
+            18.0,
+            18.0,
+            18.0,
+            18.0
+        ],
+        "score": 4.5
+    },
+    {
+        "name": "Curro Academy Wilgeheuwel",
+        "rankings": [
+            18.0,
+            18.0,
+            18.0,
+            18.0,
+            18.0,
+            18.0,
+            19.0,
+            19.0,
+            19.0,
+            19.0
+        ],
+        "score": 4.0
+    },
+    {
+        "name": "Curro Bankenveld School",
+        "rankings": [
+            22.0,
+            22.0,
+            20.0,
+            21.0,
+            21.0,
+            21.0,
+            21.0,
+            21.0,
+            20.0,
+            20.0
+        ],
+        "score": 4.0
     },
     {
         "name": "Curro Kathu",
         "rankings": [
+            20.0,
+            20.0,
+            21.0,
             22.0,
             22.0,
+            22.0,
+            22.0,
+            22.0,
+            21.0,
+            21.0
+        ],
+        "score": 4.0
+    },
+    {
+        "name": "Curro Academy Parkdene",
+        "rankings": [
+            19.0,
+            19.0,
+            19.0,
+            20.0,
+            20.0,
+            20.0,
+            20.0,
+            20.0,
+            22.0,
+            22.0
+        ],
+        "score": 3.0
+    },
+    {
+        "name": "Curro Rivonia",
+        "rankings": [
+            25.0,
+            25.0,
+            25.0,
+            23.0,
             23.0,
             23.0,
             23.0,
@@ -411,95 +457,109 @@ var dataset =
             23.0,
             23.0
         ],
-        "score": 6.0
-    },
-    {
-        "name": "Curro Academy Riverside",
-        "rankings": [
-            28.0,
-            29.0,
-            29.0,
-            29.0,
-            26.0,
-            25.0,
-            24.0,
-            24.0
-        ],
-        "score": 5.0
-    },
-    {
-        "name": "Curro St Dominics",
-        "rankings": [
-            23.0,
-            23.0,
-            24.0,
-            24.0,
-            24.0,
-            24.0,
-            25.0,
-            25.0
-        ],
-        "score": 5.0
-    },
-    {
-        "name": "Curro Academy Clayville",
-        "rankings": [
-            26.0,
-            27.0,
-            25.0,
-            25.0,
-            25.0,
-            26.0,
-            26.0,
-            26.0
-        ],
-        "score": 4.0
-    },
-    {
-        "name": "Curro Academy Soshanguve",
-        "rankings": [
-            24.0,
-            24.0,
-            26.0,
-            26.0,
-            27.0,
-            27.0,
-            27.0,
-            27.0
-        ],
-        "score": 4.0
-    },
-    {
-        "name": "Curro Creston College",
-        "rankings": [
-            25.0,
-            26.0,
-            27.0,
-            27.0,
-            28.0,
-            28.0,
-            28.0,
-            28.0
-        ],
-        "score": 4.0
+        "score": 3.0
     },
     {
         "name": "Curro Academy Mahikeng",
         "rankings": [
             27.0,
+            27.0,
+            27.0,
+            27.0,
+            24.0,
+            24.0,
+            24.0,
+            24.0,
+            24.0,
+            24.0
+        ],
+        "score": 2.0
+    },
+    {
+        "name": "Curro Bloemfontein School",
+        "rankings": [
+            23.0,
+            23.0,
+            23.0,
+            24.0,
+            25.0,
+            25.0,
+            25.0,
+            25.0,
+            25.0,
+            25.0
+        ],
+        "score": 2.0
+    },
+    {
+        "name": "Curro Waterstone College",
+        "rankings": [
+            24.0,
+            24.0,
+            24.0,
+            25.0,
+            26.0,
+            26.0,
+            26.0,
+            26.0,
+            26.0,
+            26.0
+        ],
+        "score": 2.0
+    },
+    {
+        "name": "Curro Academy Clayville",
+        "rankings": [
+            26.0,
+            26.0,
+            26.0,
+            26.0,
+            27.0,
+            27.0,
+            27.0,
+            27.0,
+            27.0,
+            27.0
+        ],
+        "score": 1.0
+    },
+    {
+        "name": "Curro Creston College",
+        "rankings": [
             28.0,
             28.0,
             28.0,
+            28.0,
+            28.0,
+            28.0,
+            28.0,
+            28.0,
+            28.0,
+            28.0
+        ],
+        "score": 1.0
+    },
+    {
+        "name": "Curro Edenvale",
+        "rankings": [
+            29.0,
+            29.0,
+            29.0,
+            29.0,
+            29.0,
+            29.0,
             29.0,
             29.0,
             29.0,
             29.0
         ],
-        "score": 3.0
+        "score": 1.0
     },
     {
-        "name": "Curro Academy Wilgeheuwel",
+        "name": "Curro Helderwyk",
         "rankings": [
+            30.0,
+            30.0,
             30.0,
             30.0,
             30.0,
@@ -509,11 +569,13 @@ var dataset =
             30.0,
             30.0
         ],
-        "score": 2.0
+        "score": 1.0
     },
     {
-        "name": "Curro Waterstone College",
+        "name": "Curro Academy Savanna City",
         "rankings": [
+            31.0,
+            31.0,
             31.0,
             31.0,
             31.0,
@@ -523,11 +585,13 @@ var dataset =
             31.0,
             31.0
         ],
-        "score": 2.0
+        "score": 0.0
     },
     {
-        "name": "Curro Helderwyk",
+        "name": "Curro Secunda",
         "rankings": [
+            32.0,
+            32.0,
             32.0,
             32.0,
             32.0,
@@ -537,11 +601,13 @@ var dataset =
             32.0,
             32.0
         ],
-        "score": 1.0
+        "score": 0.0
     },
     {
-        "name": "Curro Thatchfield",
+        "name": "Curro St Dominics",
         "rankings": [
+            33.0,
+            33.0,
             33.0,
             33.0,
             33.0,
@@ -551,11 +617,13 @@ var dataset =
             33.0,
             33.0
         ],
-        "score": 1.0
+        "score": 0.0
     },
     {
-        "name": "Meridian Pinehurst Private School",
+        "name": "Curro Thatchfield",
         "rankings": [
+            34.0,
+            34.0,
             34.0,
             34.0,
             34.0,
@@ -565,11 +633,13 @@ var dataset =
             34.0,
             34.0
         ],
-        "score": 1.0
+        "score": 0.0
     },
     {
-        "name": "Curro Academy Savanna City",
+        "name": "Meridian Cosmo City",
         "rankings": [
+            35.0,
+            35.0,
             35.0,
             35.0,
             35.0,
@@ -578,34 +648,6 @@ var dataset =
             35.0,
             35.0,
             35.0
-        ],
-        "score": 0.0
-    },
-    {
-        "name": "Meridian Cosmo City",
-        "rankings": [
-            36.0,
-            36.0,
-            36.0,
-            36.0,
-            36.0,
-            36.0,
-            36.0,
-            36.0
-        ],
-        "score": 0.0
-    },
-    {
-        "name": "Meridian Karino Independent School",
-        "rankings": [
-            37.0,
-            37.0,
-            37.0,
-            37.0,
-            37.0,
-            37.0,
-            37.0,
-            37.0
         ],
         "score": 0.0
     }
